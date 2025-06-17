@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.HighRiskApplicationMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.HighRiskApplication" id="THighRiskApplicationMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="farmerId" column="farmer_id" jdbcType="BIGINT"/>
+        <result property="applicantId" column="applicant_id" jdbcType="BIGINT"/>
+        <result property="applicationType" column="application_type" jdbcType="TINYINT"/>
+        <result property="reason" column="reason" jdbcType="VARCHAR"/>
+        <result property="targetRiskLevel" column="target_risk_level" jdbcType="TINYINT"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="THighRiskApplicationMap">
+        select
+            `id`, `farmer_id`, `applicant_id`, `application_type`, `reason`, `target_risk_level`, `status`, `is_deleted`, `create_time`, `update_time`
+        from t_high_risk_application
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="THighRiskApplicationMap">
+        select
+        `id`, `farmer_id`, `applicant_id`, `application_type`, `reason`, `target_risk_level`, `status`, `is_deleted`, `create_time`, `update_time`
+        from t_high_risk_application
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="applicantId != null">
+                and `applicant_id` = #{applicantId}
+            </if>
+            <if test="applicationType != null">
+                and `application_type` = #{applicationType}
+            </if>
+            <if test="reason != null and reason != ''">
+                and `reason` = #{reason}
+            </if>
+            <if test="targetRiskLevel != null">
+                and `target_risk_level` = #{targetRiskLevel}
+            </if>
+            <if test="status != null and status != ''">
+                and `status` = #{status}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_high_risk_application
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="applicantId != null">
+                and `applicant_id` = #{applicantId}
+            </if>
+            <if test="applicationType != null">
+                and `application_type` = #{applicationType}
+            </if>
+            <if test="reason != null and reason != ''">
+                and `reason` = #{reason}
+            </if>
+            <if test="targetRiskLevel != null">
+                and `target_risk_level` = #{targetRiskLevel}
+            </if>
+            <if test="status != null and status != ''">
+                and `status` = #{status}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_high_risk_application(`farmer_id`, `applicant_id`, `application_type`, `reason`, `target_risk_level`, `status`, `is_deleted`, `create_time`, `update_time`)
+        values (#{farmerId}, #{applicantId}, #{applicationType}, #{reason}, #{targetRiskLevel}, #{status}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_high_risk_application(`farmer_id`, `applicant_id`, `application_type`, `reason`, `target_risk_level`, `status`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.farmerId}, #{entity.applicantId}, #{entity.applicationType}, #{entity.reason}, #{entity.targetRiskLevel}, #{entity.status}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_high_risk_application(`id`, `farmer_id`, `applicant_id`, `application_type`, `reason`, `target_risk_level`, `status`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.farmerId}, #{entity.applicantId}, #{entity.applicationType}, #{entity.reason}, #{entity.targetRiskLevel}, #{entity.status}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `farmer_id` = values(`farmer_id`),
+        `applicant_id` = values(`applicant_id`),
+        `application_type` = values(`application_type`),
+        `reason` = values(`reason`),
+        `target_risk_level` = values(`target_risk_level`),
+        `status` = values(`status`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_high_risk_application
+        <set>
+            <if test="farmerId != null">
+                `farmer_id` = #{farmerId},
+            </if>
+            <if test="applicantId != null">
+                `applicant_id` = #{applicantId},
+            </if>
+            <if test="applicationType != null">
+                `application_type` = #{applicationType},
+            </if>
+            <if test="reason != null and reason != ''">
+                `reason` = #{reason},
+            </if>
+            <if test="targetRiskLevel != null">
+                `target_risk_level` = #{targetRiskLevel},
+            </if>
+            <if test="status != null and status != ''">
+                `status` = #{status},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_high_risk_application
+        where `id` = #{id}
+    </delete>
+
+</mapper>

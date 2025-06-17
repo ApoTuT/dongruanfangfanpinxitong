@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.ApplicationAttachmentMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.ApplicationAttachment" id="TApplicationAttachmentMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="applicationId" column="application_id" jdbcType="BIGINT"/>
+        <result property="originalFileName" column="original_file_name" jdbcType="VARCHAR"/>
+        <result property="filePath" column="file_path" jdbcType="VARCHAR"/>
+        <result property="fileType" column="file_type" jdbcType="VARCHAR"/>
+        <result property="fileSize" column="file_size" jdbcType="BIGINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="uploadedAt" column="uploaded_at" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TApplicationAttachmentMap">
+        select
+            `id`, `application_id`, `original_file_name`, `file_path`, `file_type`, `file_size`, `is_deleted`, `uploaded_at`, `create_time`, `update_time`
+        from t_application_attachment
+        where id = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TApplicationAttachmentMap">
+        select
+        `id`, `application_id`, `original_file_name`, `file_path`, `file_type`, `file_size`, `is_deleted`, `uploaded_at`, `create_time`, `update_time`
+        from t_application_attachment
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="applicationId != null">
+                and `application_id` = #{applicationId}
+            </if>
+            <if test="originalFileName != null and originalFileName != ''">
+                and `original_file_name` = #{originalFileName}
+            </if>
+            <if test="filePath != null and filePath != ''">
+                and `file_path` = #{filePath}
+            </if>
+            <if test="fileType != null and fileType != ''">
+                and `file_type` = #{fileType}
+            </if>
+            <if test="fileSize != null">
+                and `file_size` = #{fileSize}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="uploadedAt != null">
+                and `uploaded_at` = #{uploadedAt}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_application_attachment
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="applicationId != null">
+                and `application_id` = #{applicationId}
+            </if>
+            <if test="originalFileName != null and originalFileName != ''">
+                and `original_file_name` = #{originalFileName}
+            </if>
+            <if test="filePath != null and filePath != ''">
+                and `file_path` = #{filePath}
+            </if>
+            <if test="fileType != null and fileType != ''">
+                and `file_type` = #{fileType}
+            </if>
+            <if test="fileSize != null">
+                and `file_size` = #{fileSize}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="uploadedAt != null">
+                and `uploaded_at` = #{uploadedAt}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_application_attachment(`application_id`, `original_file_name`, `file_path`, `file_type`, `file_size`, `is_deleted`, `uploaded_at`, `create_time`, `update_time`)
+        values (#{applicationId}, #{originalFileName}, #{filePath}, #{fileType}, #{fileSize}, #{isDeleted}, #{uploadedAt}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_application_attachment(`application_id`, `original_file_name`, `file_path`, `file_type`, `file_size`, `is_deleted`, `uploaded_at`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.applicationId}, #{entity.originalFileName}, #{entity.filePath}, #{entity.fileType}, #{entity.fileSize}, #{entity.isDeleted}, #{entity.uploadedAt}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_application_attachment(`application_id`, `original_file_name`, `file_path`, `file_type`, `file_size`, `is_deleted`, `uploaded_at`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.applicationId}, #{entity.originalFileName}, #{entity.filePath}, #{entity.fileType}, #{entity.fileSize}, #{entity.isDeleted}, #{entity.uploadedAt}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `application_id` = values(`application_id`),
+        `original_file_name` = values(`original_file_name`),
+        `file_path` = values(`file_path`),
+        `file_type` = values(`file_type`),
+        `file_size` = values(`file_size`),
+        `is_deleted` = values(`is_deleted`),
+        `uploaded_at` = values(`uploaded_at`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_application_attachment
+        <set>
+            <if test="applicationId != null">
+                `application_id` = #{applicationId},
+            </if>
+            <if test="originalFileName != null and originalFileName != ''">
+                `original_file_name` = #{originalFileName},
+            </if>
+            <if test="filePath != null and filePath != ''">
+                `file_path` = #{filePath},
+            </if>
+            <if test="fileType != null and fileType != ''">
+                `file_type` = #{fileType},
+            </if>
+            <if test="fileSize != null">
+                `file_size` = #{fileSize},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="uploadedAt != null">
+                `uploaded_at` = #{uploadedAt},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_application_attachment
+        where id = #{id}
+    </delete>
+
+</mapper>

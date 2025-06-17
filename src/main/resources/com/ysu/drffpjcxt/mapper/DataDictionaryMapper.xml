@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.DataDictionaryMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.DataDictionary" id="TDataDictionaryMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="typeCode" column="type_code" jdbcType="VARCHAR"/>
+        <result property="itemCode" column="item_code" jdbcType="VARCHAR"/>
+        <result property="itemName" column="item_name" jdbcType="VARCHAR"/>
+        <result property="sortOrder" column="sort_order" jdbcType="INTEGER"/>
+        <result property="isEnabled" column="is_enabled" jdbcType="TINYINT"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TDataDictionaryMap">
+        select
+            `id`, `type_code`, `item_code`, `item_name`, `sort_order`, `is_enabled`, `description`, `is_deleted`, `create_time`, `update_time`
+        from t_data_dictionary
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TDataDictionaryMap">
+        select
+        `id`, `type_code`, `item_code`, `item_name`, `sort_order`, `is_enabled`, `description`, `is_deleted`, `create_time`, `update_time`
+        from t_data_dictionary
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="typeCode != null and typeCode != ''">
+                and `type_code` = #{typeCode}
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                and `item_code` = #{itemCode}
+            </if>
+            <if test="itemName != null and itemName != ''">
+                and `item_name` = #{itemName}
+            </if>
+            <if test="sortOrder != null">
+                and `sort_order` = #{sortOrder}
+            </if>
+            <if test="isEnabled != null">
+                and `is_enabled` = #{isEnabled}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_data_dictionary
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="typeCode != null and typeCode != ''">
+                and `type_code` = #{typeCode}
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                and `item_code` = #{itemCode}
+            </if>
+            <if test="itemName != null and itemName != ''">
+                and `item_name` = #{itemName}
+            </if>
+            <if test="sortOrder != null">
+                and `sort_order` = #{sortOrder}
+            </if>
+            <if test="isEnabled != null">
+                and `is_enabled` = #{isEnabled}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_data_dictionary(`type_code`, `item_code`, `item_name`, `sort_order`, `is_enabled`, `description`, `is_deleted`, `create_time`, `update_time`)
+        values (#{typeCode}, #{itemCode}, #{itemName}, #{sortOrder}, #{isEnabled}, #{description}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_data_dictionary(`type_code`, `item_code`, `item_name`, `sort_order`, `is_enabled`, `description`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.typeCode}, #{entity.itemCode}, #{entity.itemName}, #{entity.sortOrder}, #{entity.isEnabled}, #{entity.description}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_data_dictionary(`id`, `type_code`, `item_code`, `item_name`, `sort_order`, `is_enabled`, `description`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.typeCode}, #{entity.itemCode}, #{entity.itemName}, #{entity.sortOrder}, #{entity.isEnabled}, #{entity.description}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `type_code` = values(`type_code`),
+        `item_code` = values(`item_code`),
+        `item_name` = values(`item_name`),
+        `sort_order` = values(`sort_order`),
+        `is_enabled` = values(`is_enabled`),
+        `description` = values(`description`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_data_dictionary
+        <set>
+            <if test="typeCode != null and typeCode != ''">
+                `type_code` = #{typeCode},
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                `item_code` = #{itemCode},
+            </if>
+            <if test="itemName != null and itemName != ''">
+                `item_name` = #{itemName},
+            </if>
+            <if test="sortOrder != null">
+                `sort_order` = #{sortOrder},
+            </if>
+            <if test="isEnabled != null">
+                `is_enabled` = #{isEnabled},
+            </if>
+            <if test="description != null and description != ''">
+                `description` = #{description},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_data_dictionary
+        where `id` = #{id}
+    </delete>
+
+</mapper>

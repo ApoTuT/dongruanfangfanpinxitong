@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.ReportTemplateMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.ReportTemplate" id="TReportTemplateMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="templateName" column="template_name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="applicableLevel" column="applicable_level" jdbcType="VARCHAR"/>
+        <result property="reportCycleType" column="report_cycle_type" jdbcType="VARCHAR"/>
+        <result property="templateFilePath" column="template_file_path" jdbcType="VARCHAR"/>
+        <result property="dataRuleJson" column="data_rule_json" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TReportTemplateMap">
+        select
+            `id`, `template_name`, `description`, `applicable_level`, `report_cycle_type`, `template_file_path`, `data_rule_json`, `is_deleted`, `create_time`, `update_time`
+        from t_report_template
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TReportTemplateMap">
+        select
+        `id`, `template_name`, `description`, `applicable_level`, `report_cycle_type`, `template_file_path`, `data_rule_json`, `is_deleted`, `create_time`, `update_time`
+        from t_report_template
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="templateName != null and templateName != ''">
+                and `template_name` = #{templateName}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="applicableLevel != null and applicableLevel != ''">
+                and `applicable_level` = #{applicableLevel}
+            </if>
+            <if test="reportCycleType != null and reportCycleType != ''">
+                and `report_cycle_type` = #{reportCycleType}
+            </if>
+            <if test="templateFilePath != null and templateFilePath != ''">
+                and `template_file_path` = #{templateFilePath}
+            </if>
+            <if test="dataRuleJson != null">
+                and `data_rule_json` = #{dataRuleJson}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_report_template
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="templateName != null and templateName != ''">
+                and `template_name` = #{templateName}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="applicableLevel != null and applicableLevel != ''">
+                and `applicable_level` = #{applicableLevel}
+            </if>
+            <if test="reportCycleType != null and reportCycleType != ''">
+                and `report_cycle_type` = #{reportCycleType}
+            </if>
+            <if test="templateFilePath != null and templateFilePath != ''">
+                and `template_file_path` = #{templateFilePath}
+            </if>
+            <if test="dataRuleJson != null">
+                and `data_rule_json` = #{dataRuleJson}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_report_template(`template_name`, `description`, `applicable_level`, `report_cycle_type`, `template_file_path`, `data_rule_json`, `is_deleted`, `create_time`, `update_time`)
+        values (#{templateName}, #{description}, #{applicableLevel}, #{reportCycleType}, #{templateFilePath}, #{dataRuleJson}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_report_template(`template_name`, `description`, `applicable_level`, `report_cycle_type`, `template_file_path`, `data_rule_json`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.templateName}, #{entity.description}, #{entity.applicableLevel}, #{entity.reportCycleType}, #{entity.templateFilePath}, #{entity.dataRuleJson}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_report_template(`id`, `template_name`, `description`, `applicable_level`, `report_cycle_type`, `template_file_path`, `data_rule_json`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.templateName}, #{entity.description}, #{entity.applicableLevel}, #{entity.reportCycleType}, #{entity.templateFilePath}, #{entity.dataRuleJson}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `template_name` = values(`template_name`),
+        `description` = values(`description`),
+        `applicable_level` = values(`applicable_level`),
+        `report_cycle_type` = values(`report_cycle_type`),
+        `template_file_path` = values(`template_file_path`),
+        `data_rule_json` = values(`data_rule_json`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_report_template
+        <set>
+            <if test="templateName != null and templateName != ''">
+                `template_name` = #{templateName},
+            </if>
+            <if test="description != null and description != ''">
+                `description` = #{description},
+            </if>
+            <if test="applicableLevel != null and applicableLevel != ''">
+                `applicable_level` = #{applicableLevel},
+            </if>
+            <if test="reportCycleType != null and reportCycleType != ''">
+                `report_cycle_type` = #{reportCycleType},
+            </if>
+            <if test="templateFilePath != null and templateFilePath != ''">
+                `template_file_path` = #{templateFilePath},
+            </if>
+            <if test="dataRuleJson != null">
+                `data_rule_json` = #{dataRuleJson},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_report_template
+        where `id` = #{id}
+    </delete>
+
+</mapper>

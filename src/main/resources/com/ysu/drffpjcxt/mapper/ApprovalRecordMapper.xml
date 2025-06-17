@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.ApprovalRecordMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.ApprovalRecord" id="TApprovalRecordMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="businessType" column="business_type" jdbcType="VARCHAR"/>
+        <result property="businessId" column="business_id" jdbcType="BIGINT"/>
+        <result property="stepName" column="step_name" jdbcType="VARCHAR"/>
+        <result property="approverId" column="approver_id" jdbcType="BIGINT"/>
+        <result property="result" column="result" jdbcType="TINYINT"/>
+        <result property="comments" column="comments" jdbcType="VARCHAR"/>
+        <result property="approvalTime" column="approval_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TApprovalRecordMap">
+        select
+            `id`, `business_type`, `business_id`, `step_name`, `approver_id`, `result`, `comments`, `approval_time`, `is_deleted`, `create_time`, `update_time`
+        from t_approval_record
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TApprovalRecordMap">
+        select
+        `id`, `business_type`, `business_id`, `step_name`, `approver_id`, `result`, `comments`, `approval_time`, `is_deleted`, `create_time`, `update_time`
+        from t_approval_record
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="businessType != null and businessType != ''">
+                and `business_type` = #{businessType}
+            </if>
+            <if test="businessId != null">
+                and `business_id` = #{businessId}
+            </if>
+            <if test="stepName != null and stepName != ''">
+                and `step_name` = #{stepName}
+            </if>
+            <if test="approverId != null">
+                and `approver_id` = #{approverId}
+            </if>
+            <if test="result != null">
+                and `result` = #{result}
+            </if>
+            <if test="comments != null and comments != ''">
+                and `comments` = #{comments}
+            </if>
+            <if test="approvalTime != null">
+                and `approval_time` = #{approvalTime}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_approval_record
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="businessType != null and businessType != ''">
+                and `business_type` = #{businessType}
+            </if>
+            <if test="businessId != null">
+                and `business_id` = #{businessId}
+            </if>
+            <if test="stepName != null and stepName != ''">
+                and `step_name` = #{stepName}
+            </if>
+            <if test="approverId != null">
+                and `approver_id` = #{approverId}
+            </if>
+            <if test="result != null">
+                and `result` = #{result}
+            </if>
+            <if test="comments != null and comments != ''">
+                and `comments` = #{comments}
+            </if>
+            <if test="approvalTime != null">
+                and `approval_time` = #{approvalTime}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_approval_record(`business_type`, `business_id`, `step_name`, `approver_id`, `result`, `comments`, `approval_time`, `is_deleted`, `create_time`, `update_time`)
+        values (#{businessType}, #{businessId}, #{stepName}, #{approverId}, #{result}, #{comments}, #{approvalTime}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_approval_record(`business_type`, `business_id`, `step_name`, `approver_id`, `result`, `comments`, `approval_time`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.businessType}, #{entity.businessId}, #{entity.stepName}, #{entity.approverId}, #{entity.result}, #{entity.comments}, #{entity.approvalTime}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_approval_record(`id`, `business_type`, `business_id`, `step_name`, `approver_id`, `result`, `comments`, `approval_time`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.businessType}, #{entity.businessId}, #{entity.stepName}, #{entity.approverId}, #{entity.result}, #{entity.comments}, #{entity.approvalTime}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `business_type` = values(`business_type`),
+        `business_id` = values(`business_id`),
+        `step_name` = values(`step_name`),
+        `approver_id` = values(`approver_id`),
+        `result` = values(`result`),
+        `comments` = values(`comments`),
+        `approval_time` = values(`approval_time`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_approval_record
+        <set>
+            <if test="businessType != null and businessType != ''">
+                `business_type` = #{businessType},
+            </if>
+            <if test="businessId != null">
+                `business_id` = #{businessId},
+            </if>
+            <if test="stepName != null and stepName != ''">
+                `step_name` = #{stepName},
+            </if>
+            <if test="approverId != null">
+                `approver_id` = #{approverId},
+            </if>
+            <if test="result != null">
+                `result` = #{result},
+            </if>
+            <if test="comments != null and comments != ''">
+                `comments` = #{comments},
+            </if>
+            <if test="approvalTime != null">
+                `approval_time` = #{approvalTime},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_approval_record
+        where `id` = #{id}
+    </delete>
+
+</mapper>

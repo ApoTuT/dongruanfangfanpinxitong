@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.SupportRecordAttachmentMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.SupportRecordAttachment" id="TSupportRecordAttachmentMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="recordId" column="record_id" jdbcType="VARCHAR"/>
+        <result property="attachmentType" column="attachment_type" jdbcType="VARCHAR"/>
+        <result property="originalFileName" column="original_file_name" jdbcType="VARCHAR"/>
+        <result property="filePath" column="file_path" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TSupportRecordAttachmentMap">
+        select
+            `id`, `record_id`, `attachment_type`, `original_file_name`, `file_path`, `is_deleted`, `create_time`, `update_time`
+        from t_support_record_attachment
+        where `id` = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TSupportRecordAttachmentMap">
+        select
+        `id`, `record_id`, `attachment_type`, `original_file_name`, `file_path`, `is_deleted`, `create_time`, `update_time`
+        from t_support_record_attachment
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="recordId != null">
+                and `record_id` = #{recordId}
+            </if>
+            <if test="attachmentType != null and attachmentType != ''">
+                and `attachment_type` = #{attachmentType}
+            </if>
+            <if test="originalFileName != null and originalFileName != ''">
+                and `original_file_name` = #{originalFileName}
+            </if>
+            <if test="filePath != null and filePath != ''">
+                and `file_path` = #{filePath}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_support_record_attachment
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="recordId != null">
+                and `record_id` = #{recordId}
+            </if>
+            <if test="attachmentType != null and attachmentType != ''">
+                and `attachment_type` = #{attachmentType}
+            </if>
+            <if test="originalFileName != null and originalFileName != ''">
+                and `original_file_name` = #{originalFileName}
+            </if>
+            <if test="filePath != null and filePath != ''">
+                and `file_path` = #{filePath}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_support_record_attachment(`id`, `record_id`, `attachment_type`, `original_file_name`, `file_path`, `is_deleted`, `create_time`, `update_time`)
+        values (#{id}, #{recordId}, #{attachmentType}, #{originalFileName}, #{filePath}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_support_record_attachment(`id`, `record_id`, `attachment_type`, `original_file_name`, `file_path`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.recordId}, #{entity.attachmentType}, #{entity.originalFileName}, #{entity.filePath}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_support_record_attachment(`id`, `record_id`, `attachment_type`, `original_file_name`, `file_path`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.recordId}, #{entity.attachmentType}, #{entity.originalFileName}, #{entity.filePath}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `record_id` = values(`record_id`),
+        `attachment_type` = values(`attachment_type`),
+        `original_file_name` = values(`original_file_name`),
+        `file_path` = values(`file_path`),
+        `is_deleted` = values(`is_deleted`),
+        `create_time` = values(`create_time`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_support_record_attachment
+        <set>
+            <if test="recordId != null">
+                `record_id` = #{recordId},
+            </if>
+            <if test="attachmentType != null and attachmentType != ''">
+                `attachment_type` = #{attachmentType},
+            </if>
+            <if test="originalFileName != null and originalFileName != ''">
+                `original_file_name` = #{originalFileName},
+            </if>
+            <if test="filePath != null and filePath != ''">
+                `file_path` = #{filePath},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from t_support_record_attachment
+        where `id` = #{id}
+    </delete>
+
+</mapper>

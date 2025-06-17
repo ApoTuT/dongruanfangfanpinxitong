@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.SupportPlanMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.SupportPlan" id="TSupportPlanMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="farmerId" column="farmer_id" jdbcType="BIGINT"/>
+        <result property="planName" column="plan_name" jdbcType="VARCHAR"/>
+        <result property="mainGoal" column="main_goal" jdbcType="VARCHAR"/>
+        <result property="startDate" column="start_date" jdbcType="DATE"/>
+        <result property="endDate" column="end_date" jdbcType="DATE"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="BIGINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TSupportPlanMap">
+        select
+            `id`, `farmer_id`, `plan_name`, `main_goal`, `start_date`, `end_date`, `status`, `created_by`, `is_deleted`, `create_time`, `update_time`
+        from t_support_plan
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TSupportPlanMap">
+        select
+        `id`, `farmer_id`, `plan_name`, `main_goal`, `start_date`, `end_date`, `status`, `created_by`, `is_deleted`, `create_time`, `update_time`
+        from t_support_plan
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="planName != null and planName != ''">
+                and `plan_name` = #{planName}
+            </if>
+            <if test="mainGoal != null and mainGoal != ''">
+                and `main_goal` = #{mainGoal}
+            </if>
+            <if test="startDate != null">
+                and `start_date` = #{startDate}
+            </if>
+            <if test="endDate != null">
+                and `end_date` = #{endDate}
+            </if>
+            <if test="status != null and status != ''">
+                and `status` = #{status}
+            </if>
+            <if test="createdBy != null">
+                and `created_by` = #{createdBy}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_support_plan
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="planName != null and planName != ''">
+                and `plan_name` = #{planName}
+            </if>
+            <if test="mainGoal != null and mainGoal != ''">
+                and `main_goal` = #{mainGoal}
+            </if>
+            <if test="startDate != null">
+                and `start_date` = #{startDate}
+            </if>
+            <if test="endDate != null">
+                and `end_date` = #{endDate}
+            </if>
+            <if test="status != null and status != ''">
+                and `status` = #{status}
+            </if>
+            <if test="createdBy != null">
+                and `created_by` = #{createdBy}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_support_plan(`farmer_id`, `plan_name`, `main_goal`, `start_date`, `end_date`, `status`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values (#{farmerId}, #{planName}, #{mainGoal}, #{startDate}, #{endDate}, #{status}, #{createdBy}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_support_plan(`farmer_id`, `plan_name`, `main_goal`, `start_date`, `end_date`, `status`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.farmerId}, #{entity.planName}, #{entity.mainGoal}, #{entity.startDate}, #{entity.endDate}, #{entity.status}, #{entity.createdBy}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_support_plan(`id`, `farmer_id`, `plan_name`, `main_goal`, `start_date`, `end_date`, `status`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.farmerId}, #{entity.planName}, #{entity.mainGoal}, #{entity.startDate}, #{entity.endDate}, #{entity.status}, #{entity.createdBy}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `farmer_id` = values(`farmer_id`),
+        `plan_name` = values(`plan_name`),
+        `main_goal` = values(`main_goal`),
+        `start_date` = values(`start_date`),
+        `end_date` = values(`end_date`),
+        `status` = values(`status`),
+        `created_by` = values(`created_by`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_support_plan
+        <set>
+            <if test="farmerId != null">
+                `farmer_id` = #{farmerId},
+            </if>
+            <if test="planName != null and planName != ''">
+                `plan_name` = #{planName},
+            </if>
+            <if test="mainGoal != null and mainGoal != ''">
+                `main_goal` = #{mainGoal},
+            </if>
+            <if test="startDate != null">
+                `start_date` = #{startDate},
+            </if>
+            <if test="endDate != null">
+                `end_date` = #{endDate},
+            </if>
+            <if test="status != null and status != ''">
+                `status` = #{status},
+            </if>
+            <if test="createdBy != null">
+                `created_by` = #{createdBy},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_support_plan
+        where `id` = #{id}
+    </delete>
+
+</mapper>

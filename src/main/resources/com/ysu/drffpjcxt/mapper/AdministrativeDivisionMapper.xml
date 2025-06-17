@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.AdministrativeDivisionMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.AdministrativeDivision" id="TAdministrativeDivisionMap">
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="divisionName" column="division_name" jdbcType="VARCHAR"/>
+        <result property="levelType" column="level_type" jdbcType="VARCHAR"/>
+        <result property="parentCode" column="parent_code" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TAdministrativeDivisionMap">
+        select `code`, `division_name`, `level_type`, `parent_code`, `is_deleted`, `create_time`, `update_time`
+        from t_administrative_division
+        where `code` = #{code}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TAdministrativeDivisionMap">
+        select
+        `code`, `division_name`, `level_type`, `parent_code`, `is_deleted`, `create_time`, `update_time`
+        from t_administrative_division
+        <where>
+            <if test="code != null and code != ''">
+                and `code` = #{code}
+            </if>
+            <if test="divisionName != null and divisionName != ''">
+                and `division_name` = #{divisionName}
+            </if>
+            <if test="levelType != null">
+                and `level_type` = #{levelType}
+            </if>
+            <if test="parentCode != null and parentCode != ''">
+                and `parent_code` = #{parentCode}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_administrative_division
+        <where>
+            <if test="code != null and code != ''">
+                and `code` = #{code}
+            </if>
+            <if test="divisionName != null and divisionName != ''">
+                and `division_name` = #{divisionName}
+            </if>
+            <if test="levelType != null">
+                and `level_type` = #{levelType}
+            </if>
+            <if test="parentCode != null and parentCode != ''">
+                and `parent_code` = #{parentCode}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        insert into t_administrative_division(`code`, `division_name`, `level_type`, `parent_code`, `is_deleted`, `create_time`, `update_time`)
+        values (#{code}, #{divisionName}, #{levelType}, #{parentCode}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into t_administrative_division(`code`, `division_name`, `level_type`, `parent_code`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.code}, #{entity.divisionName}, #{entity.levelType}, #{entity.parentCode}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch">
+        insert into t_administrative_division(
+        `code`, `division_name`, `level_type`, `parent_code`,
+        `is_deleted`, `create_time`, `update_time`
+        )
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (
+            #{entity.code}, #{entity.divisionName}, #{entity.levelType}, #{entity.parentCode},
+            #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime}
+            )
+        </foreach>
+        on duplicate key update
+        `division_name` = values(`division_name`),
+        `level_type` = values(`level_type`),
+        `parent_code` = values(`parent_code`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_administrative_division
+        <set>
+            <if test="divisionName != null and divisionName != ''">
+                `division_name` = #{divisionName},
+            </if>
+            <if test="levelType != null">
+                `level_type` = #{levelType},
+            </if>
+            <if test="parentCode != null and parentCode != ''">
+                `parent_code` = #{parentCode},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `code` = #{code}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_administrative_division
+        where `code` = #{code}
+    </delete>
+
+</mapper>

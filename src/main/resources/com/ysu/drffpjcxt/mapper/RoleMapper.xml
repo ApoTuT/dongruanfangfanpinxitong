@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.RoleMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.Role" id="TRoleMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="roleCode" column="role_code" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TRoleMap">
+        select
+            `id`, `role_name`, `role_code`, `description`, `is_deleted`, `create_time`, `update_time`
+        from t_role
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TRoleMap">
+        select
+        `id`, `role_name`, `role_code`, `description`, `is_deleted`, `create_time`, `update_time`
+        from t_role
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                and `role_name` = #{roleName}
+            </if>
+            <if test="roleCode != null and roleCode != ''">
+                and `role_code` = #{roleCode}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_role
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                and `role_name` = #{roleName}
+            </if>
+            <if test="roleCode != null and roleCode != ''">
+                and `role_code` = #{roleCode}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_role(`role_name`, `role_code`, `description`, `is_deleted`, `create_time`, `update_time`)
+        values (#{roleName}, #{roleCode}, #{description}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_role(`role_name`, `role_code`, `description`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.roleName}, #{entity.roleCode}, #{entity.description}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_role(`id`, `role_name`, `role_code`, `description`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.roleName}, #{entity.roleCode}, #{entity.description}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `role_name` = values(`role_name`),
+        `role_code` = values(`role_code`),
+        `description` = values(`description`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_role
+        <set>
+            <if test="roleName != null and roleName != ''">
+                `role_name` = #{roleName},
+            </if>
+            <if test="roleCode != null and roleCode != ''">
+                `role_code` = #{roleCode},
+            </if>
+            <if test="description != null and description != ''">
+                `description` = #{description},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_role
+        where `id` = #{id}
+    </delete>
+
+</mapper>

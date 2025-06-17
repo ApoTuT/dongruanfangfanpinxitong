@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.ReportInstanceMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.ReportInstance" id="TReportInstanceMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="reportName" column="report_name" jdbcType="VARCHAR"/>
+        <result property="templateId" column="template_id" jdbcType="BIGINT"/>
+        <result property="generationParamsJson" column="generation_params_json" jdbcType="VARCHAR"/>
+        <result property="filePath" column="file_path" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="BIGINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TReportInstanceMap">
+        select
+            `id`, `report_name`, `template_id`, `generation_params_json`, `file_path`, `created_by`, `is_deleted`, `create_time`, `update_time`
+        from t_report_instance
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TReportInstanceMap">
+        select
+        `id`, `report_name`, `template_id`, `generation_params_json`, `file_path`, `created_by`, `is_deleted`, `create_time`, `update_time`
+        from t_report_instance
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="reportName != null and reportName != ''">
+                and `report_name` = #{reportName}
+            </if>
+            <if test="templateId != null">
+                and `template_id` = #{templateId}
+            </if>
+            <if test="generationParamsJson != null">
+                and `generation_params_json` = #{generationParamsJson}
+            </if>
+            <if test="filePath != null and filePath != ''">
+                and `file_path` = #{filePath}
+            </if>
+            <if test="createdBy != null">
+                and `created_by` = #{createdBy}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_report_instance
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="reportName != null and reportName != ''">
+                and `report_name` = #{reportName}
+            </if>
+            <if test="templateId != null">
+                and `template_id` = #{templateId}
+            </if>
+            <if test="generationParamsJson != null">
+                and `generation_params_json` = #{generationParamsJson}
+            </if>
+            <if test="filePath != null and filePath != ''">
+                and `file_path` = #{filePath}
+            </if>
+            <if test="createdBy != null">
+                and `created_by` = #{createdBy}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_report_instance(`report_name`, `template_id`, `generation_params_json`, `file_path`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values (#{reportName}, #{templateId}, #{generationParamsJson}, #{filePath}, #{createdBy}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_report_instance(`report_name`, `template_id`, `generation_params_json`, `file_path`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.reportName}, #{entity.templateId}, #{entity.generationParamsJson}, #{entity.filePath}, #{entity.createdBy}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_report_instance(`id`, `report_name`, `template_id`, `generation_params_json`, `file_path`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.reportName}, #{entity.templateId}, #{entity.generationParamsJson}, #{entity.filePath}, #{entity.createdBy}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `report_name` = values(`report_name`),
+        `template_id` = values(`template_id`),
+        `generation_params_json` = values(`generation_params_json`),
+        `file_path` = values(`file_path`),
+        `created_by` = values(`created_by`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_report_instance
+        <set>
+            <if test="reportName != null and reportName != ''">
+                `report_name` = #{reportName},
+            </if>
+            <if test="templateId != null">
+                `template_id` = #{templateId},
+            </if>
+            <if test="generationParamsJson != null">
+                `generation_params_json` = #{generationParamsJson},
+            </if>
+            <if test="filePath != null and filePath != ''">
+                `file_path` = #{filePath},
+            </if>
+            <if test="createdBy != null">
+                `created_by` = #{createdBy},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_report_instance
+        where `id` = #{id}
+    </delete>
+
+</mapper>

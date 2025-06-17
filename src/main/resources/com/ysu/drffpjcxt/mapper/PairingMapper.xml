@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.PairingMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.Pairing" id="TPairingMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="farmerId" column="farmer_id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="startDate" column="start_date" jdbcType="DATE"/>
+        <result property="endDate" column="end_date" jdbcType="DATE"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="reasonForChange" column="reason_for_change" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="BIGINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TPairingMap">
+        select
+            `id`, `farmer_id`, `user_id`, `start_date`, `end_date`, `status`, `reason_for_change`, `created_by`, `is_deleted`, `create_time`, `update_time`
+        from t_pairing
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TPairingMap">
+        select
+        `id`, `farmer_id`, `user_id`, `start_date`, `end_date`, `status`, `reason_for_change`, `created_by`, `is_deleted`, `create_time`, `update_time`
+        from t_pairing
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="userId != null">
+                and `user_id` = #{userId}
+            </if>
+            <if test="startDate != null">
+                and `start_date` = #{startDate}
+            </if>
+            <if test="endDate != null">
+                and `end_date` = #{endDate}
+            </if>
+            <if test="status != null">
+                and `status` = #{status}
+            </if>
+            <if test="reasonForChange != null and reasonForChange != ''">
+                and `reason_for_change` = #{reasonForChange}
+            </if>
+            <if test="createdBy != null">
+                and `created_by` = #{createdBy}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_pairing
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="userId != null">
+                and `user_id` = #{userId}
+            </if>
+            <if test="startDate != null">
+                and `start_date` = #{startDate}
+            </if>
+            <if test="endDate != null">
+                and `end_date` = #{endDate}
+            </if>
+            <if test="status != null">
+                and `status` = #{status}
+            </if>
+            <if test="reasonForChange != null and reasonForChange != ''">
+                and `reason_for_change` = #{reasonForChange}
+            </if>
+            <if test="createdBy != null">
+                and `created_by` = #{createdBy}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_pairing(`farmer_id`, `user_id`, `start_date`, `end_date`, `status`, `reason_for_change`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values (#{farmerId}, #{userId}, #{startDate}, #{endDate}, #{status}, #{reasonForChange}, #{createdBy}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_pairing(`farmer_id`, `user_id`, `start_date`, `end_date`, `status`, `reason_for_change`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.farmerId}, #{entity.userId}, #{entity.startDate}, #{entity.endDate}, #{entity.status}, #{entity.reasonForChange}, #{entity.createdBy}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_pairing(`id`, `farmer_id`, `user_id`, `start_date`, `end_date`, `status`, `reason_for_change`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.farmerId}, #{entity.userId}, #{entity.startDate}, #{entity.endDate}, #{entity.status}, #{entity.reasonForChange}, #{entity.createdBy}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `farmer_id` = values(`farmer_id`),
+        `user_id` = values(`user_id`),
+        `start_date` = values(`start_date`),
+        `end_date` = values(`end_date`),
+        `status` = values(`status`),
+        `reason_for_change` = values(`reason_for_change`),
+        `created_by` = values(`created_by`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_pairing
+        <set>
+            <if test="farmerId != null">
+                `farmer_id` = #{farmerId},
+            </if>
+            <if test="userId != null">
+                `user_id` = #{userId},
+            </if>
+            <if test="startDate != null">
+                `start_date` = #{startDate},
+            </if>
+            <if test="endDate != null">
+                `end_date` = #{endDate},
+            </if>
+            <if test="status != null">
+                `status` = #{status},
+            </if>
+            <if test="reasonForChange != null and reasonForChange != ''">
+                `reason_for_change` = #{reasonForChange},
+            </if>
+            <if test="createdBy != null">
+                `created_by` = #{createdBy},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_pairing
+        where `id` = #{id}
+    </delete>
+
+</mapper>

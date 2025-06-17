@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.OperationLogMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.OperationLog" id="TOperationLogMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="operatorId" column="operator_id" jdbcType="BIGINT"/>
+        <result property="operatorName" column="operator_name" jdbcType="VARCHAR"/>
+        <result property="module" column="module" jdbcType="VARCHAR"/>
+        <result property="operationType" column="operation_type" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="requestIp" column="request_ip" jdbcType="VARCHAR"/>
+        <result property="operationTime" column="operation_time" jdbcType="TIMESTAMP"/>
+        <result property="isSuccess" column="is_success" jdbcType="TINYINT"/>
+        <result property="errorMessage" column="error_message" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TOperationLogMap">
+        select
+            `id`, `operator_id`, `operator_name`, `module`, `operation_type`, `description`, `request_ip`, `operation_time`, `is_success`, `error_message`, `create_time`, `update_time`
+        from t_operation_log
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TOperationLogMap">
+        select
+        `id`, `operator_id`, `operator_name`, `module`, `operation_type`, `description`, `request_ip`, `operation_time`, `is_success`, `error_message`, `create_time`, `update_time`
+        from t_operation_log
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="operatorId != null">
+                and `operator_id` = #{operatorId}
+            </if>
+            <if test="operatorName != null and operatorName != ''">
+                and `operator_name` = #{operatorName}
+            </if>
+            <if test="module != null and module != ''">
+                and `module` = #{module}
+            </if>
+            <if test="operationType != null and operationType != ''">
+                and `operation_type` = #{operationType}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="requestIp != null and requestIp != ''">
+                and `request_ip` = #{requestIp}
+            </if>
+            <if test="operationTime != null">
+                and `operation_time` = #{operationTime}
+            </if>
+            <if test="isSuccess != null">
+                and `is_success` = #{isSuccess}
+            </if>
+            <if test="errorMessage != null and errorMessage != ''">
+                and `error_message` = #{errorMessage}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_operation_log
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="operatorId != null">
+                and `operator_id` = #{operatorId}
+            </if>
+            <if test="operatorName != null and operatorName != ''">
+                and `operator_name` = #{operatorName}
+            </if>
+            <if test="module != null and module != ''">
+                and `module` = #{module}
+            </if>
+            <if test="operationType != null and operationType != ''">
+                and `operation_type` = #{operationType}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="requestIp != null and requestIp != ''">
+                and `request_ip` = #{requestIp}
+            </if>
+            <if test="operationTime != null">
+                and `operation_time` = #{operationTime}
+            </if>
+            <if test="isSuccess != null">
+                and `is_success` = #{isSuccess}
+            </if>
+            <if test="errorMessage != null and errorMessage != ''">
+                and `error_message` = #{errorMessage}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_operation_log(`operator_id`, `operator_name`, `module`, `operation_type`, `description`, `request_ip`, `operation_time`, `is_success`, `error_message`, `create_time`, `update_time`)
+        values (#{operatorId}, #{operatorName}, #{module}, #{operationType}, #{description}, #{requestIp}, #{operationTime}, #{isSuccess}, #{errorMessage}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_operation_log(`operator_id`, `operator_name`, `module`, `operation_type`, `description`, `request_ip`, `operation_time`, `is_success`, `error_message`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.operatorId}, #{entity.operatorName}, #{entity.module}, #{entity.operationType}, #{entity.description}, #{entity.requestIp}, #{entity.operationTime}, #{entity.isSuccess}, #{entity.errorMessage}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_operation_log(`id`, `operator_id`, `operator_name`, `module`, `operation_type`, `description`, `request_ip`, `operation_time`, `is_success`, `error_message`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.operatorId}, #{entity.operatorName}, #{entity.module}, #{entity.operationType}, #{entity.description}, #{entity.requestIp}, #{entity.operationTime}, #{entity.isSuccess}, #{entity.errorMessage}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `operator_id` = values(`operator_id`),
+        `operator_name` = values(`operator_name`),
+        `module` = values(`module`),
+        `operation_type` = values(`operation_type`),
+        `description` = values(`description`),
+        `request_ip` = values(`request_ip`),
+        `operation_time` = values(`operation_time`),
+        `is_success` = values(`is_success`),
+        `error_message` = values(`error_message`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_operation_log
+        <set>
+            <if test="operatorId != null">
+                `operator_id` = #{operatorId},
+            </if>
+            <if test="operatorName != null and operatorName != ''">
+                `operator_name` = #{operatorName},
+            </if>
+            <if test="module != null and module != ''">
+                `module` = #{module},
+            </if>
+            <if test="operationType != null and operationType != ''">
+                `operation_type` = #{operationType},
+            </if>
+            <if test="description != null and description != ''">
+                `description` = #{description},
+            </if>
+            <if test="requestIp != null and requestIp != ''">
+                `request_ip` = #{requestIp},
+            </if>
+            <if test="operationTime != null">
+                `operation_time` = #{operationTime},
+            </if>
+            <if test="isSuccess != null">
+                `is_success` = #{isSuccess},
+            </if>
+            <if test="errorMessage != null and errorMessage != ''">
+                `error_message` = #{errorMessage},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_operation_log
+        where `id` = #{id}
+    </delete>
+
+</mapper>

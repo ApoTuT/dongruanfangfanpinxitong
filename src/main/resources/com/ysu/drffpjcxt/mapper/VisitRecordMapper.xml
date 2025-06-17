@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.VisitRecordMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.VisitRecord" id="TVisitRecordMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="planId" column="plan_id" jdbcType="VARCHAR"/>
+        <result property="farmerId" column="farmer_id" jdbcType="VARCHAR"/>
+        <result property="visitorId" column="visitor_id" jdbcType="VARCHAR"/>
+        <result property="visitDate" column="visit_date" jdbcType="TIMESTAMP"/>
+        <result property="visitContent" column="visit_content" jdbcType="VARCHAR"/>
+        <result property="problemsFound" column="problems_found" jdbcType="VARCHAR"/>
+        <result property="farmerRequests" column="farmer_requests" jdbcType="VARCHAR"/>
+        <result property="followUpAction" column="follow_up_action" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TVisitRecordMap">
+        select
+            `id`, `plan_id`, `farmer_id`, `visitor_id`, `visit_date`, `visit_content`, `problems_found`, `farmer_requests`, `follow_up_action`, `status`, `is_deleted`, `create_time`, `update_time`
+        from t_visit_record
+        where `id` = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TVisitRecordMap">
+        select
+        `id`, `plan_id`, `farmer_id`, `visitor_id`, `visit_date`, `visit_content`, `problems_found`, `farmer_requests`, `follow_up_action`, `status`, `is_deleted`, `create_time`, `update_time`
+        from t_visit_record
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="planId != null">
+                and `plan_id` = #{planId}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="visitorId != null">
+                and `visitor_id` = #{visitorId}
+            </if>
+            <if test="visitDate != null">
+                and `visit_date` = #{visitDate}
+            </if>
+            <if test="visitContent != null and visitContent != ''">
+                and `visit_content` = #{visitContent}
+            </if>
+            <if test="problemsFound != null and problemsFound != ''">
+                and `problems_found` = #{problemsFound}
+            </if>
+            <if test="farmerRequests != null and farmerRequests != ''">
+                and `farmer_requests` = #{farmerRequests}
+            </if>
+            <if test="followUpAction != null and followUpAction != ''">
+                and `follow_up_action` = #{followUpAction}
+            </if>
+            <if test="status != null and status != ''">
+                and `status` = #{status}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_visit_record
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="planId != null">
+                and `plan_id` = #{planId}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="visitorId != null">
+                and `visitor_id` = #{visitorId}
+            </if>
+            <if test="visitDate != null">
+                and `visit_date` = #{visitDate}
+            </if>
+            <if test="visitContent != null and visitContent != ''">
+                and `visit_content` = #{visitContent}
+            </if>
+            <if test="problemsFound != null and problemsFound != ''">
+                and `problems_found` = #{problemsFound}
+            </if>
+            <if test="farmerRequests != null and farmerRequests != ''">
+                and `farmer_requests` = #{farmerRequests}
+            </if>
+            <if test="followUpAction != null and followUpAction != ''">
+                and `follow_up_action` = #{followUpAction}
+            </if>
+            <if test="status != null and status != ''">
+                and `status` = #{status}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_visit_record(`id`, `plan_id`, `farmer_id`, `visitor_id`, `visit_date`, `visit_content`, `problems_found`, `farmer_requests`, `follow_up_action`, `status`, `is_deleted`, `create_time`, `update_time`)
+        values (#{id}, #{planId}, #{farmerId}, #{visitorId}, #{visitDate}, #{visitContent}, #{problemsFound}, #{farmerRequests}, #{followUpAction}, #{status}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_visit_record(`id`, `plan_id`, `farmer_id`, `visitor_id`, `visit_date`, `visit_content`, `problems_found`, `farmer_requests`, `follow_up_action`, `status`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.planId}, #{entity.farmerId}, #{entity.visitorId}, #{entity.visitDate}, #{entity.visitContent}, #{entity.problemsFound}, #{entity.farmerRequests}, #{entity.followUpAction}, #{entity.status}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_visit_record(`id`, `plan_id`, `farmer_id`, `visitor_id`, `visit_date`, `visit_content`, `problems_found`, `farmer_requests`, `follow_up_action`, `status`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.planId}, #{entity.farmerId}, #{entity.visitorId}, #{entity.visitDate}, #{entity.visitContent}, #{entity.problemsFound}, #{entity.farmerRequests}, #{entity.followUpAction}, #{entity.status}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `plan_id` = values(`plan_id`),
+        `farmer_id` = values(`farmer_id`),
+        `visitor_id` = values(`visitor_id`),
+        `visit_date` = values(`visit_date`),
+        `visit_content` = values(`visit_content`),
+        `problems_found` = values(`problems_found`),
+        `farmer_requests` = values(`farmer_requests`),
+        `follow_up_action` = values(`follow_up_action`),
+        `status` = values(`status`),
+        `is_deleted` = values(`is_deleted`),
+        `create_time` = values(`create_time`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_visit_record
+        <set>
+            <if test="planId != null">
+                `plan_id` = #{planId},
+            </if>
+            <if test="farmerId != null">
+                `farmer_id` = #{farmerId},
+            </if>
+            <if test="visitorId != null">
+                `visitor_id` = #{visitorId},
+            </if>
+            <if test="visitDate != null">
+                `visit_date` = #{visitDate},
+            </if>
+            <if test="visitContent != null and visitContent != ''">
+                `visit_content` = #{visitContent},
+            </if>
+            <if test="problemsFound != null and problemsFound != ''">
+                `problems_found` = #{problemsFound},
+            </if>
+            <if test="farmerRequests != null and farmerRequests != ''">
+                `farmer_requests` = #{farmerRequests},
+            </if>
+            <if test="followUpAction != null and followUpAction != ''">
+                `follow_up_action` = #{followUpAction},
+            </if>
+            <if test="status != null and status != ''">
+                `status` = #{status},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from t_visit_record
+        where `id` = #{id}
+    </delete>
+
+</mapper>

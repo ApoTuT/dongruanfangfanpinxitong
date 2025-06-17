@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.DashboardWidgetMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.DashboardWidget" id="TDashboardWidgetMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="dashboardId" column="dashboard_id" jdbcType="BIGINT"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="chartType" column="chart_type" jdbcType="VARCHAR"/>
+        <result property="layoutJson" column="layout_json" jdbcType="VARCHAR"/>
+        <result property="dataQueryJson" column="data_query_json" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TDashboardWidgetMap">
+        select
+            `id`, `dashboard_id`, `title`, `chart_type`, `layout_json`, `data_query_json`, `is_deleted`, `create_time`, `update_time`
+        from t_dashboard_widget
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TDashboardWidgetMap">
+        select
+        `id`, `dashboard_id`, `title`, `chart_type`, `layout_json`, `data_query_json`, `is_deleted`, `create_time`, `update_time`
+        from t_dashboard_widget
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="dashboardId != null">
+                and `dashboard_id` = #{dashboardId}
+            </if>
+            <if test="title != null and title != ''">
+                and `title` = #{title}
+            </if>
+            <if test="chartType != null and chartType != ''">
+                and `chart_type` = #{chartType}
+            </if>
+            <if test="layoutJson != null">
+                and `layout_json` = #{layoutJson}
+            </if>
+            <if test="dataQueryJson != null">
+                and `data_query_json` = #{dataQueryJson}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_dashboard_widget
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="dashboardId != null">
+                and `dashboard_id` = #{dashboardId}
+            </if>
+            <if test="title != null and title != ''">
+                and `title` = #{title}
+            </if>
+            <if test="chartType != null and chartType != ''">
+                and `chart_type` = #{chartType}
+            </if>
+            <if test="layoutJson != null">
+                and `layout_json` = #{layoutJson}
+            </if>
+            <if test="dataQueryJson != null">
+                and `data_query_json` = #{dataQueryJson}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_dashboard_widget(`dashboard_id`, `title`, `chart_type`, `layout_json`, `data_query_json`, `is_deleted`, `create_time`, `update_time`)
+        values (#{dashboardId}, #{title}, #{chartType}, #{layoutJson}, #{dataQueryJson}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_dashboard_widget(`dashboard_id`, `title`, `chart_type`, `layout_json`, `data_query_json`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dashboardId}, #{entity.title}, #{entity.chartType}, #{entity.layoutJson}, #{entity.dataQueryJson}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_dashboard_widget(`id`, `dashboard_id`, `title`, `chart_type`, `layout_json`, `data_query_json`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.dashboardId}, #{entity.title}, #{entity.chartType}, #{entity.layoutJson}, #{entity.dataQueryJson}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `dashboard_id` = values(`dashboard_id`),
+        `title` = values(`title`),
+        `chart_type` = values(`chart_type`),
+        `layout_json` = values(`layout_json`),
+        `data_query_json` = values(`data_query_json`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_dashboard_widget
+        <set>
+            <if test="dashboardId != null">
+                `dashboard_id` = #{dashboardId},
+            </if>
+            <if test="title != null and title != ''">
+                `title` = #{title},
+            </if>
+            <if test="chartType != null and chartType != ''">
+                `chart_type` = #{chartType},
+            </if>
+            <if test="layoutJson != null">
+                `layout_json` = #{layoutJson},
+            </if>
+            <if test="dataQueryJson != null">
+                `data_query_json` = #{dataQueryJson},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_dashboard_widget
+        where `id` = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.SystemNotificationMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.SystemNotification" id="TSystemNotificationMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="recipientId" column="recipient_id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="notificationType" column="notification_type" jdbcType="VARCHAR"/>
+        <result property="businessId" column="business_id" jdbcType="VARCHAR"/>
+        <result property="businessType" column="business_type" jdbcType="VARCHAR"/>
+        <result property="isRead" column="is_read" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TSystemNotificationMap">
+        select
+            `id`, `recipient_id`, `title`, `content`, `notification_type`, `business_id`, `business_type`, `is_read`, `is_deleted`, `create_time`, `update_time`
+        from t_system_notification
+        where `id` = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TSystemNotificationMap">
+        select
+        `id`, `recipient_id`, `title`, `content`, `notification_type`, `business_id`, `business_type`, `is_read`, `is_deleted`, `create_time`, `update_time`
+        from t_system_notification
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="recipientId != null">
+                and `recipient_id` = #{recipientId}
+            </if>
+            <if test="title != null and title != ''">
+                and `title` = #{title}
+            </if>
+            <if test="content != null and content != ''">
+                and `content` = #{content}
+            </if>
+            <if test="notificationType != null and notificationType != ''">
+                and `notification_type` = #{notificationType}
+            </if>
+            <if test="businessId != null">
+                and `business_id` = #{businessId}
+            </if>
+            <if test="businessType != null and businessType != ''">
+                and `business_type` = #{businessType}
+            </if>
+            <if test="isRead != null">
+                and `is_read` = #{isRead}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_system_notification
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="recipientId != null">
+                and `recipient_id` = #{recipientId}
+            </if>
+            <if test="title != null and title != ''">
+                and `title` = #{title}
+            </if>
+            <if test="content != null and content != ''">
+                and `content` = #{content}
+            </if>
+            <if test="notificationType != null and notificationType != ''">
+                and `notification_type` = #{notificationType}
+            </if>
+            <if test="businessId != null">
+                and `business_id` = #{businessId}
+            </if>
+            <if test="businessType != null and businessType != ''">
+                and `business_type` = #{businessType}
+            </if>
+            <if test="isRead != null">
+                and `is_read` = #{isRead}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_system_notification(`id`, `recipient_id`, `title`, `content`, `notification_type`, `business_id`, `business_type`, `is_read`, `is_deleted`, `create_time`, `update_time`)
+        values (#{id}, #{recipientId}, #{title}, #{content}, #{notificationType}, #{businessId}, #{businessType}, #{isRead}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_system_notification(`recipient_id`, `title`, `content`, `notification_type`, `business_id`, `business_type`, `is_read`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.recipientId}, #{entity.title}, #{entity.content}, #{entity.notificationType}, #{entity.businessId}, #{entity.businessType}, #{entity.isRead}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_system_notification(`id`, `recipient_id`, `title`, `content`, `notification_type`, `business_id`, `business_type`, `is_read`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.recipientId}, #{entity.title}, #{entity.content}, #{entity.notificationType}, #{entity.businessId}, #{entity.businessType}, #{entity.isRead}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `recipient_id` = values(`recipient_id`),
+        `title` = values(`title`),
+        `content` = values(`content`),
+        `notification_type` = values(`notification_type`),
+        `business_id` = values(`business_id`),
+        `business_type` = values(`business_type`),
+        `is_read` = values(`is_read`),
+        `is_deleted` = values(`is_deleted`),
+        `create_time` = values(`create_time`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_system_notification
+        <set>
+            <if test="recipientId != null">
+                `recipient_id` = #{recipientId},
+            </if>
+            <if test="title != null and title != ''">
+                `title` = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                `content` = #{content},
+            </if>
+            <if test="notificationType != null and notificationType != ''">
+                `notification_type` = #{notificationType},
+            </if>
+            <if test="businessId != null">
+                `business_id` = #{businessId},
+            </if>
+            <if test="businessType != null and businessType != ''">
+                `business_type` = #{businessType},
+            </if>
+            <if test="isRead != null">
+                `is_read` = #{isRead},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from t_system_notification
+        where `id` = #{id}
+    </delete>
+
+</mapper>

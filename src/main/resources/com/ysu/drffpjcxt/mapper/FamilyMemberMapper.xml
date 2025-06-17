@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.FamilyMemberMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.FamilyMember" id="TFamilyMemberMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="farmerId" column="farmer_id" jdbcType="BIGINT"/>
+        <result property="memberName" column="member_name" jdbcType="VARCHAR"/>
+        <result property="relationToHead" column="relation_to_head" jdbcType="VARCHAR"/>
+        <result property="idCard" column="id_card" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="TINYINT"/>
+        <result property="birthDate" column="birth_date" jdbcType="DATE"/>
+        <result property="healthStatus" column="health_status" jdbcType="VARCHAR"/>
+        <result property="laborAbility" column="labor_ability" jdbcType="VARCHAR"/>
+        <result property="educationLevel" column="education_level" jdbcType="VARCHAR"/>
+        <result property="schoolStatus" column="school_status" jdbcType="VARCHAR"/>
+        <result property="employmentStatus" column="employment_status" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TFamilyMemberMap">
+        select
+            `id`, `farmer_id`, `member_name`, `relation_to_head`, `id_card`, `gender`, `birth_date`, `health_status`, `labor_ability`, `education_level`, `school_status`, `employment_status`, `is_deleted`, `create_time`, `update_time`
+        from t_family_member
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TFamilyMemberMap">
+        select
+        `id`, `farmer_id`, `member_name`, `relation_to_head`, `id_card`, `gender`, `birth_date`, `health_status`, `labor_ability`, `education_level`, `school_status`, `employment_status`, `is_deleted`, `create_time`, `update_time`
+        from t_family_member
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="memberName != null and memberName != ''">
+                and `member_name` = #{memberName}
+            </if>
+            <if test="relationToHead != null and relationToHead != ''">
+                and `relation_to_head` = #{relationToHead}
+            </if>
+            <if test="idCard != null and idCard != ''">
+                and `id_card` = #{idCard}
+            </if>
+            <if test="gender != null">
+                and `gender` = #{gender}
+            </if>
+            <if test="birthDate != null">
+                and `birth_date` = #{birthDate}
+            </if>
+            <if test="healthStatus != null and healthStatus != ''">
+                and `health_status` = #{healthStatus}
+            </if>
+            <if test="laborAbility != null and laborAbility != ''">
+                and `labor_ability` = #{laborAbility}
+            </if>
+            <if test="educationLevel != null and educationLevel != ''">
+                and `education_level` = #{educationLevel}
+            </if>
+            <if test="schoolStatus != null and schoolStatus != ''">
+                and `school_status` = #{schoolStatus}
+            </if>
+            <if test="employmentStatus != null and employmentStatus != ''">
+                and `employment_status` = #{employmentStatus}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_family_member
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="farmerId != null">
+                and `farmer_id` = #{farmerId}
+            </if>
+            <if test="memberName != null and memberName != ''">
+                and `member_name` = #{memberName}
+            </if>
+            <if test="relationToHead != null and relationToHead != ''">
+                and `relation_to_head` = #{relationToHead}
+            </if>
+            <if test="idCard != null and idCard != ''">
+                and `id_card` = #{idCard}
+            </if>
+            <if test="gender != null">
+                and `gender` = #{gender}
+            </if>
+            <if test="birthDate != null">
+                and `birth_date` = #{birthDate}
+            </if>
+            <if test="healthStatus != null and healthStatus != ''">
+                and `health_status` = #{healthStatus}
+            </if>
+            <if test="laborAbility != null and laborAbility != ''">
+                and `labor_ability` = #{laborAbility}
+            </if>
+            <if test="educationLevel != null and educationLevel != ''">
+                and `education_level` = #{educationLevel}
+            </if>
+            <if test="schoolStatus != null and schoolStatus != ''">
+                and `school_status` = #{schoolStatus}
+            </if>
+            <if test="employmentStatus != null and employmentStatus != ''">
+                and `employment_status` = #{employmentStatus}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_family_member(`farmer_id`, `member_name`, `relation_to_head`, `id_card`, `gender`, `birth_date`, `health_status`, `labor_ability`, `education_level`, `school_status`, `employment_status`, `is_deleted`, `create_time`, `update_time`)
+        values (#{farmerId}, #{memberName}, #{relationToHead}, #{idCard}, #{gender}, #{birthDate}, #{healthStatus}, #{laborAbility}, #{educationLevel}, #{schoolStatus}, #{employmentStatus}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_family_member(`farmer_id`, `member_name`, `relation_to_head`, `id_card`, `gender`, `birth_date`, `health_status`, `labor_ability`, `education_level`, `school_status`, `employment_status`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.farmerId}, #{entity.memberName}, #{entity.relationToHead}, #{entity.idCard}, #{entity.gender}, #{entity.birthDate}, #{entity.healthStatus}, #{entity.laborAbility}, #{entity.educationLevel}, #{entity.schoolStatus}, #{entity.employmentStatus}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_family_member(`id`, `farmer_id`, `member_name`, `relation_to_head`, `id_card`, `gender`, `birth_date`, `health_status`, `labor_ability`, `education_level`, `school_status`, `employment_status`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.farmerId}, #{entity.memberName}, #{entity.relationToHead}, #{entity.idCard}, #{entity.gender}, #{entity.birthDate}, #{entity.healthStatus}, #{entity.laborAbility}, #{entity.educationLevel}, #{entity.schoolStatus}, #{entity.employmentStatus}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `farmer_id` = values(`farmer_id`),
+        `member_name` = values(`member_name`),
+        `relation_to_head` = values(`relation_to_head`),
+        `id_card` = values(`id_card`),
+        `gender` = values(`gender`),
+        `birth_date` = values(`birth_date`),
+        `health_status` = values(`health_status`),
+        `labor_ability` = values(`labor_ability`),
+        `education_level` = values(`education_level`),
+        `school_status` = values(`school_status`),
+        `employment_status` = values(`employment_status`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_family_member
+        <set>
+            <if test="farmerId != null">
+                `farmer_id` = #{farmerId},
+            </if>
+            <if test="memberName != null and memberName != ''">
+                `member_name` = #{memberName},
+            </if>
+            <if test="relationToHead != null and relationToHead != ''">
+                `relation_to_head` = #{relationToHead},
+            </if>
+            <if test="idCard != null and idCard != ''">
+                `id_card` = #{idCard},
+            </if>
+            <if test="gender != null">
+                `gender` = #{gender},
+            </if>
+            <if test="birthDate != null">
+                `birth_date` = #{birthDate},
+            </if>
+            <if test="healthStatus != null and healthStatus != ''">
+                `health_status` = #{healthStatus},
+            </if>
+            <if test="laborAbility != null and laborAbility != ''">
+                `labor_ability` = #{laborAbility},
+            </if>
+            <if test="educationLevel != null and educationLevel != ''">
+                `education_level` = #{educationLevel},
+            </if>
+            <if test="schoolStatus != null and schoolStatus != ''">
+                `school_status` = #{schoolStatus},
+            </if>
+            <if test="employmentStatus != null and employmentStatus != ''">
+                `employment_status` = #{employmentStatus},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_family_member
+        where `id` = #{id}
+    </delete>
+
+</mapper>

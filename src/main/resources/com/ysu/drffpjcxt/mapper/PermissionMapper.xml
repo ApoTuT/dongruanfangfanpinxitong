@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.PermissionMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.Permission" id="TPermissionMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="permissionName" column="permission_name" jdbcType="VARCHAR"/>
+        <result property="permissionCode" column="permission_code" jdbcType="VARCHAR"/>
+        <result property="module" column="module" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TPermissionMap">
+        select
+            `id`, `permission_name`, `permission_code`, `module`, `description`, `is_deleted`, `create_time`, `update_time`
+        from t_permission
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TPermissionMap">
+        select
+        `id`, `permission_name`, `permission_code`, `module`, `description`, `is_deleted`, `create_time`, `update_time`
+        from t_permission
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="permissionName != null and permissionName != ''">
+                and `permission_name` = #{permissionName}
+            </if>
+            <if test="permissionCode != null and permissionCode != ''">
+                and `permission_code` = #{permissionCode}
+            </if>
+            <if test="module != null and module != ''">
+                and `module` = #{module}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_permission
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="permissionName != null and permissionName != ''">
+                and `permission_name` = #{permissionName}
+            </if>
+            <if test="permissionCode != null and permissionCode != ''">
+                and `permission_code` = #{permissionCode}
+            </if>
+            <if test="module != null and module != ''">
+                and `module` = #{module}
+            </if>
+            <if test="description != null and description != ''">
+                and `description` = #{description}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_permission(`permission_name`, `permission_code`, `module`, `description`, `is_deleted`, `create_time`, `update_time`)
+        values (#{permissionName}, #{permissionCode}, #{module}, #{description}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_permission(`permission_name`, `permission_code`, `module`, `description`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.permissionName}, #{entity.permissionCode}, #{entity.module}, #{entity.description}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_permission(`id`, `permission_name`, `permission_code`, `module`, `description`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.permissionName}, #{entity.permissionCode}, #{entity.module}, #{entity.description}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `permission_name` = values(`permission_name`),
+        `permission_code` = values(`permission_code`),
+        `module` = values(`module`),
+        `description` = values(`description`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_permission
+        <set>
+            <if test="permissionName != null and permissionName != ''">
+                `permission_name` = #{permissionName},
+            </if>
+            <if test="permissionCode != null and permissionCode != ''">
+                `permission_code` = #{permissionCode},
+            </if>
+            <if test="module != null and module != ''">
+                `module` = #{module},
+            </if>
+            <if test="description != null and description != ''">
+                `description` = #{description},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_permission
+        where `id` = #{id}
+    </delete>
+
+</mapper>

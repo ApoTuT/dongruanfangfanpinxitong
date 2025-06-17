@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.ClueVerificationMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.ClueVerification" id="TClueVerificationMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="clueId" column="clue_id" jdbcType="BIGINT"/>
+        <result property="verifierId" column="verifier_id" jdbcType="BIGINT"/>
+        <result property="verificationDate" column="verification_date" jdbcType="DATE"/>
+        <result property="processDescription" column="process_description" jdbcType="VARCHAR"/>
+        <result property="conclusion" column="conclusion" jdbcType="VARCHAR"/>
+        <result property="detailedSituation" column="detailed_situation" jdbcType="VARCHAR"/>
+        <result property="suggestion" column="suggestion" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TClueVerificationMap">
+        select
+            `id`, `clue_id`, `verifier_id`, `verification_date`, `process_description`, `conclusion`, `detailed_situation`, `suggestion`, `is_deleted`, `create_time`, `update_time`
+        from t_clue_verification
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TClueVerificationMap">
+        select
+        `id`, `clue_id`, `verifier_id`, `verification_date`, `process_description`, `conclusion`, `detailed_situation`, `suggestion`, `is_deleted`, `create_time`, `update_time`
+        from t_clue_verification
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="clueId != null">
+                and `clue_id` = #{clueId}
+            </if>
+            <if test="verifierId != null">
+                and `verifier_id` = #{verifierId}
+            </if>
+            <if test="verificationDate != null">
+                and `verification_date` = #{verificationDate}
+            </if>
+            <if test="processDescription != null and processDescription != ''">
+                and `process_description` = #{processDescription}
+            </if>
+            <if test="conclusion != null and conclusion != ''">
+                and `conclusion` = #{conclusion}
+            </if>
+            <if test="detailedSituation != null and detailedSituation != ''">
+                and `detailed_situation` = #{detailedSituation}
+            </if>
+            <if test="suggestion != null and suggestion != ''">
+                and `suggestion` = #{suggestion}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_clue_verification
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="clueId != null">
+                and `clue_id` = #{clueId}
+            </if>
+            <if test="verifierId != null">
+                and `verifier_id` = #{verifierId}
+            </if>
+            <if test="verificationDate != null">
+                and `verification_date` = #{verificationDate}
+            </if>
+            <if test="processDescription != null and processDescription != ''">
+                and `process_description` = #{processDescription}
+            </if>
+            <if test="conclusion != null and conclusion != ''">
+                and `conclusion` = #{conclusion}
+            </if>
+            <if test="detailedSituation != null and detailedSituation != ''">
+                and `detailed_situation` = #{detailedSituation}
+            </if>
+            <if test="suggestion != null and suggestion != ''">
+                and `suggestion` = #{suggestion}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_clue_verification(`clue_id`, `verifier_id`, `verification_date`, `process_description`, `conclusion`, `detailed_situation`, `suggestion`, `is_deleted`, `create_time`, `update_time`)
+        values (#{clueId}, #{verifierId}, #{verificationDate}, #{processDescription}, #{conclusion}, #{detailedSituation}, #{suggestion}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_clue_verification(`clue_id`, `verifier_id`, `verification_date`, `process_description`, `conclusion`, `detailed_situation`, `suggestion`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.clueId}, #{entity.verifierId}, #{entity.verificationDate}, #{entity.processDescription}, #{entity.conclusion}, #{entity.detailedSituation}, #{entity.suggestion}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_clue_verification(`id`, `clue_id`, `verifier_id`, `verification_date`, `process_description`, `conclusion`, `detailed_situation`, `suggestion`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.clueId}, #{entity.verifierId}, #{entity.verificationDate}, #{entity.processDescription}, #{entity.conclusion}, #{entity.detailedSituation}, #{entity.suggestion}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `clue_id` = values(`clue_id`),
+        `verifier_id` = values(`verifier_id`),
+        `verification_date` = values(`verification_date`),
+        `process_description` = values(`process_description`),
+        `conclusion` = values(`conclusion`),
+        `detailed_situation` = values(`detailed_situation`),
+        `suggestion` = values(`suggestion`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_clue_verification
+        <set>
+            <if test="clueId != null">
+                `clue_id` = #{clueId},
+            </if>
+            <if test="verifierId != null">
+                `verifier_id` = #{verifierId},
+            </if>
+            <if test="verificationDate != null">
+                `verification_date` = #{verificationDate},
+            </if>
+            <if test="processDescription != null and processDescription != ''">
+                `process_description` = #{processDescription},
+            </if>
+            <if test="conclusion != null and conclusion != ''">
+                `conclusion` = #{conclusion},
+            </if>
+            <if test="detailedSituation != null and detailedSituation != ''">
+                `detailed_situation` = #{detailedSituation},
+            </if>
+            <if test="suggestion != null and suggestion != ''">
+                `suggestion` = #{suggestion},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_clue_verification
+        where `id` = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.RolePermissionMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.RolePermission" id="TRolePermissionMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="roleId" column="role_id" jdbcType="BIGINT"/>
+        <result property="permissionId" column="permission_id" jdbcType="BIGINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TRolePermissionMap">
+        select
+            `id`, `role_id`, `permission_id`, `is_deleted`, `create_time`, `update_time`
+        from t_role_permission
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TRolePermissionMap">
+        select
+        `id`, `role_id`, `permission_id`, `is_deleted`, `create_time`, `update_time`
+        from t_role_permission
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="roleId != null">
+                and `role_id` = #{roleId}
+            </if>
+            <if test="permissionId != null">
+                and `permission_id` = #{permissionId}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_role_permission
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="roleId != null">
+                and `role_id` = #{roleId}
+            </if>
+            <if test="permissionId != null">
+                and `permission_id` = #{permissionId}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_role_permission(`role_id`, `permission_id`, `is_deleted`, `create_time`, `update_time`)
+        values (#{roleId}, #{permissionId}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_role_permission(`role_id`, `permission_id`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.roleId}, #{entity.permissionId}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_role_permission(`id`, `role_id`, `permission_id`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.roleId}, #{entity.permissionId}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `role_id` = values(`role_id`),
+        `permission_id` = values(`permission_id`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_role_permission
+        <set>
+            <if test="roleId != null">
+                `role_id` = #{roleId},
+            </if>
+            <if test="permissionId != null">
+                `permission_id` = #{permissionId},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_role_permission
+        where `id` = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ysu.drffpjcxt.mapper.SupportRecordMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.SupportRecord" id="TSupportRecordMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="measureId" column="measure_id" jdbcType="BIGINT"/>
+        <result property="planId" column="plan_id" jdbcType="BIGINT"/>
+        <result property="farmerId" column="farmer_id" jdbcType="BIGINT"/>
+        <result property="activityDate" column="activity_date" jdbcType="DATE"/>
+        <result property="activityContent" column="activity_content" jdbcType="VARCHAR"/>
+        <result property="resourceInputDescription" column="resource_input_description" jdbcType="VARCHAR"/>
+        <result property="financialInputAmount" column="financial_input_amount" jdbcType="DECIMAL"/>
+        <result property="progressAndEffect" column="progress_and_effect" jdbcType="VARCHAR"/>
+        <result property="problemsEncountered" column="problems_encountered" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="BIGINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TSupportRecordMap">
+        select
+            `id`, `measure_id`, `plan_id`, `farmer_id`, `activity_date`, `activity_content`,
+            `resource_input_description`, `financial_input_amount`, `progress_and_effect`,
+            `problems_encountered`, `created_by`, `is_deleted`, `create_time`, `update_time`
+        from t_support_record
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TSupportRecordMap">
+        select
+        `id`, `measure_id`, `plan_id`, `farmer_id`, `activity_date`, `activity_content`,
+        `resource_input_description`, `financial_input_amount`, `progress_and_effect`,
+        `problems_encountered`, `created_by`, `is_deleted`, `create_time`, `update_time`
+        from t_support_record
+        <where>
+            <if test="id != null">and `id` = #{id}</if>
+            <if test="measureId != null">and `measure_id` = #{measureId}</if>
+            <if test="planId != null">and `plan_id` = #{planId}</if>
+            <if test="farmerId != null">and `farmer_id` = #{farmerId}</if>
+            <if test="activityDate != null">and `activity_date` = #{activityDate}</if>
+            <if test="activityContent != null and activityContent != ''">
+                and `activity_content` = #{activityContent}
+            </if>
+            <if test="resourceInputDescription != null and resourceInputDescription != ''">
+                and `resource_input_description` = #{resourceInputDescription}
+            </if>
+            <if test="financialInputAmount != null">
+                and `financial_input_amount` = #{financialInputAmount}
+            </if>
+            <if test="progressAndEffect != null and progressAndEffect != ''">
+                and `progress_and_effect` = #{progressAndEffect}
+            </if>
+            <if test="problemsEncountered != null and problemsEncountered != ''">
+                and `problems_encountered` = #{problemsEncountered}
+            </if>
+            <if test="createdBy != null">and `created_by` = #{createdBy}</if>
+            <if test="isDeleted != null">and `is_deleted` = #{isDeleted}</if>
+            <if test="createTime != null">and `create_time` = #{createTime}</if>
+            <if test="updateTime != null">and `update_time` = #{updateTime}</if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_support_record
+        <where>
+            <if test="id != null">and `id` = #{id}</if>
+            <if test="measureId != null">and `measure_id` = #{measureId}</if>
+            <if test="planId != null">and `plan_id` = #{planId}</if>
+            <if test="farmerId != null">and `farmer_id` = #{farmerId}</if>
+            <if test="activityDate != null">and `activity_date` = #{activityDate}</if>
+            <if test="activityContent != null and activityContent != ''">
+                and `activity_content` = #{activityContent}
+            </if>
+            <if test="resourceInputDescription != null and resourceInputDescription != ''">
+                and `resource_input_description` = #{resourceInputDescription}
+            </if>
+            <if test="financialInputAmount != null">
+                and `financial_input_amount` = #{financialInputAmount}
+            </if>
+            <if test="progressAndEffect != null and progressAndEffect != ''">
+                and `progress_and_effect` = #{progressAndEffect}
+            </if>
+            <if test="problemsEncountered != null and problemsEncountered != ''">
+                and `problems_encountered` = #{problemsEncountered}
+            </if>
+            <if test="createdBy != null">and `created_by` = #{createdBy}</if>
+            <if test="isDeleted != null">and `is_deleted` = #{isDeleted}</if>
+            <if test="createTime != null">and `create_time` = #{createTime}</if>
+            <if test="updateTime != null">and `update_time` = #{updateTime}</if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_support_record(
+            `measure_id`, `plan_id`, `farmer_id`, `activity_date`, `activity_content`,
+            `resource_input_description`, `financial_input_amount`, `progress_and_effect`,
+            `problems_encountered`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values (
+                   #{measureId}, #{planId}, #{farmerId}, #{activityDate}, #{activityContent},
+                   #{resourceInputDescription}, #{financialInputAmount}, #{progressAndEffect},
+                   #{problemsEncountered}, #{createdBy}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_support_record(
+        `measure_id`, `plan_id`, `farmer_id`, `activity_date`, `activity_content`,
+        `resource_input_description`, `financial_input_amount`, `progress_and_effect`,
+        `problems_encountered`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.measureId}, #{entity.planId}, #{entity.farmerId}, #{entity.activityDate},
+            #{entity.activityContent}, #{entity.resourceInputDescription}, #{entity.financialInputAmount},
+            #{entity.progressAndEffect}, #{entity.problemsEncountered}, #{entity.createdBy},
+            #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_support_record(
+        `id`, `measure_id`, `plan_id`, `farmer_id`, `activity_date`, `activity_content`,
+        `resource_input_description`, `financial_input_amount`, `progress_and_effect`,
+        `problems_encountered`, `created_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.measureId}, #{entity.planId}, #{entity.farmerId}, #{entity.activityDate},
+            #{entity.activityContent}, #{entity.resourceInputDescription}, #{entity.financialInputAmount},
+            #{entity.progressAndEffect}, #{entity.problemsEncountered}, #{entity.createdBy},
+            #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `measure_id` = values(`measure_id`),
+        `plan_id` = values(`plan_id`),
+        `farmer_id` = values(`farmer_id`),
+        `activity_date` = values(`activity_date`),
+        `activity_content` = values(`activity_content`),
+        `resource_input_description` = values(`resource_input_description`),
+        `financial_input_amount` = values(`financial_input_amount`),
+        `progress_and_effect` = values(`progress_and_effect`),
+        `problems_encountered` = values(`problems_encountered`),
+        `created_by` = values(`created_by`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_support_record
+        <set>
+            <if test="measureId != null">`measure_id` = #{measureId},</if>
+            <if test="planId != null">`plan_id` = #{planId},</if>
+            <if test="farmerId != null">`farmer_id` = #{farmerId},</if>
+            <if test="activityDate != null">`activity_date` = #{activityDate},</if>
+            <if test="activityContent != null and activityContent != ''">`activity_content` = #{activityContent},</if>
+            <if test="resourceInputDescription != null and resourceInputDescription != ''">`resource_input_description` = #{resourceInputDescription},</if>
+            <if test="financialInputAmount != null">`financial_input_amount` = #{financialInputAmount},</if>
+            <if test="progressAndEffect != null and progressAndEffect != ''">`progress_and_effect` = #{progressAndEffect},</if>
+            <if test="problemsEncountered != null and problemsEncountered != ''">`problems_encountered` = #{problemsEncountered},</if>
+            <if test="createdBy != null">`created_by` = #{createdBy},</if>
+            <if test="isDeleted != null">`is_deleted` = #{isDeleted},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="updateTime != null">`update_time` = #{updateTime},</if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from t_support_record where `id` = #{id}
+    </delete>
+
+</mapper>

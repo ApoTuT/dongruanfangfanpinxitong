@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.MaterialApplicationDetailMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.MaterialApplicationDetail" id="TMaterialApplicationDetailMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="applicationId" column="application_id" jdbcType="BIGINT"/>
+        <result property="materialId" column="material_id" jdbcType="BIGINT"/>
+        <result property="requestedQuantity" column="requested_quantity" jdbcType="INTEGER"/>
+        <result property="approvedQuantity" column="approved_quantity" jdbcType="INTEGER"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TMaterialApplicationDetailMap">
+        select
+            `id`, `application_id`, `material_id`, `requested_quantity`, `approved_quantity`, `is_deleted`, `create_time`, `update_time`
+        from t_material_application_detail
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TMaterialApplicationDetailMap">
+        select
+        `id`, `application_id`, `material_id`, `requested_quantity`, `approved_quantity`, `is_deleted`, `create_time`, `update_time`
+        from t_material_application_detail
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="applicationId != null">
+                and `application_id` = #{applicationId}
+            </if>
+            <if test="materialId != null">
+                and `material_id` = #{materialId}
+            </if>
+            <if test="requestedQuantity != null">
+                and `requested_quantity` = #{requestedQuantity}
+            </if>
+            <if test="approvedQuantity != null">
+                and `approved_quantity` = #{approvedQuantity}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_material_application_detail
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="applicationId != null">
+                and `application_id` = #{applicationId}
+            </if>
+            <if test="materialId != null">
+                and `material_id` = #{materialId}
+            </if>
+            <if test="requestedQuantity != null">
+                and `requested_quantity` = #{requestedQuantity}
+            </if>
+            <if test="approvedQuantity != null">
+                and `approved_quantity` = #{approvedQuantity}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_material_application_detail(`application_id`, `material_id`, `requested_quantity`, `approved_quantity`, `is_deleted`, `create_time`, `update_time`)
+        values (#{applicationId}, #{materialId}, #{requestedQuantity}, #{approvedQuantity}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_material_application_detail(`application_id`, `material_id`, `requested_quantity`, `approved_quantity`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.applicationId}, #{entity.materialId}, #{entity.requestedQuantity}, #{entity.approvedQuantity}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_material_application_detail(`id`, `application_id`, `material_id`, `requested_quantity`, `approved_quantity`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.applicationId}, #{entity.materialId}, #{entity.requestedQuantity}, #{entity.approvedQuantity}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `application_id` = values(`application_id`),
+        `material_id` = values(`material_id`),
+        `requested_quantity` = values(`requested_quantity`),
+        `approved_quantity` = values(`approved_quantity`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_material_application_detail
+        <set>
+            <if test="applicationId != null">
+                `application_id` = #{applicationId},
+            </if>
+            <if test="materialId != null">
+                `material_id` = #{materialId},
+            </if>
+            <if test="requestedQuantity != null">
+                `requested_quantity` = #{requestedQuantity},
+            </if>
+            <if test="approvedQuantity != null">
+                `approved_quantity` = #{approvedQuantity},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_material_application_detail
+        where `id` = #{id}
+    </delete>
+
+</mapper>

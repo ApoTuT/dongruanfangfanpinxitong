@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.FarmerProfileMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.FarmerProfile" id="TFarmerProfileMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="headName" column="head_name" jdbcType="VARCHAR"/>
+        <result property="headIdCard" column="head_id_card" jdbcType="VARCHAR"/>
+        <result property="addressCode" column="address_code" jdbcType="VARCHAR"/>
+        <result property="addressDetail" column="address_detail" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="populationCount" column="population_count" jdbcType="INTEGER"/>
+        <result property="monitoringType" column="monitoring_type" jdbcType="TINYINT"/>
+        <result property="riskLevel" column="risk_level" jdbcType="TINYINT"/>
+        <result property="mainRiskTypes" column="main_risk_types" jdbcType="VARCHAR"/>
+        <result property="economicInfoJson" column="economic_info_json" jdbcType="VARCHAR"/>
+        <result property="housingInfoJson" column="housing_info_json" jdbcType="VARCHAR"/>
+        <result property="policyInfoJson" column="policy_info_json" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createdBy" column="created_by" jdbcType="BIGINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedBy" column="updated_by" jdbcType="BIGINT"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TFarmerProfileMap">
+        select
+            `id`, `head_name`, `head_id_card`, `address_code`, `address_detail`, `phone`, `population_count`, `monitoring_type`, `risk_level`, `main_risk_types`, `economic_info_json`, `housing_info_json`, `policy_info_json`, `status`, `is_deleted`, `created_by`, `create_time`, `updated_by`, `update_time`
+        from t_farmer_profile
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TFarmerProfileMap">
+        select
+        `id`, `head_name`, `head_id_card`, `address_code`, `address_detail`, `phone`, `population_count`, `monitoring_type`, `risk_level`, `main_risk_types`, `economic_info_json`, `housing_info_json`, `policy_info_json`, `status`, `is_deleted`, `created_by`, `create_time`, `updated_by`, `update_time`
+        from t_farmer_profile
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="headName != null and headName != ''">
+                and `head_name` = #{headName}
+            </if>
+            <if test="headIdCard != null and headIdCard != ''">
+                and `head_id_card` = #{headIdCard}
+            </if>
+            <if test="addressCode != null and addressCode != ''">
+                and `address_code` = #{addressCode}
+            </if>
+            <if test="addressDetail != null and addressDetail != ''">
+                and `address_detail` = #{addressDetail}
+            </if>
+            <if test="phone != null and phone != ''">
+                and `phone` = #{phone}
+            </if>
+            <if test="populationCount != null">
+                and `population_count` = #{populationCount}
+            </if>
+            <if test="monitoringType != null">
+                and `monitoring_type` = #{monitoringType}
+            </if>
+            <if test="riskLevel != null">
+                and `risk_level` = #{riskLevel}
+            </if>
+            <if test="mainRiskTypes != null">
+                and `main_risk_types` = #{mainRiskTypes}
+            </if>
+            <if test="economicInfoJson != null">
+                and `economic_info_json` = #{economicInfoJson}
+            </if>
+            <if test="housingInfoJson != null">
+                and `housing_info_json` = #{housingInfoJson}
+            </if>
+            <if test="policyInfoJson != null">
+                and `policy_info_json` = #{policyInfoJson}
+            </if>
+            <if test="status != null">
+                and `status` = #{status}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createdBy != null">
+                and `created_by` = #{createdBy}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updatedBy != null">
+                and `updated_by` = #{updatedBy}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_farmer_profile
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="headName != null and headName != ''">
+                and `head_name` = #{headName}
+            </if>
+            <if test="headIdCard != null and headIdCard != ''">
+                and `head_id_card` = #{headIdCard}
+            </if>
+            <if test="addressCode != null and addressCode != ''">
+                and `address_code` = #{addressCode}
+            </if>
+            <if test="addressDetail != null and addressDetail != ''">
+                and `address_detail` = #{addressDetail}
+            </if>
+            <if test="phone != null and phone != ''">
+                and `phone` = #{phone}
+            </if>
+            <if test="populationCount != null">
+                and `population_count` = #{populationCount}
+            </if>
+            <if test="monitoringType != null">
+                and `monitoring_type` = #{monitoringType}
+            </if>
+            <if test="riskLevel != null">
+                and `risk_level` = #{riskLevel}
+            </if>
+            <if test="mainRiskTypes != null">
+                and `main_risk_types` = #{mainRiskTypes}
+            </if>
+            <if test="economicInfoJson != null">
+                and `economic_info_json` = #{economicInfoJson}
+            </if>
+            <if test="housingInfoJson != null">
+                and `housing_info_json` = #{housingInfoJson}
+            </if>
+            <if test="policyInfoJson != null">
+                and `policy_info_json` = #{policyInfoJson}
+            </if>
+            <if test="status != null">
+                and `status` = #{status}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createdBy != null">
+                and `created_by` = #{createdBy}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updatedBy != null">
+                and `updated_by` = #{updatedBy}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_farmer_profile(`head_name`, `head_id_card`, `address_code`, `address_detail`, `phone`, `population_count`, `monitoring_type`, `risk_level`, `main_risk_types`, `economic_info_json`, `housing_info_json`, `policy_info_json`, `status`, `is_deleted`, `created_by`, `create_time`, `updated_by`, `update_time`)
+        values (#{headName}, #{headIdCard}, #{addressCode}, #{addressDetail}, #{phone}, #{populationCount}, #{monitoringType}, #{riskLevel}, #{mainRiskTypes}, #{economicInfoJson}, #{housingInfoJson}, #{policyInfoJson}, #{status}, #{isDeleted}, #{createdBy}, #{createTime}, #{updatedBy}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_farmer_profile(`head_name`, `head_id_card`, `address_code`, `address_detail`, `phone`, `population_count`, `monitoring_type`, `risk_level`, `main_risk_types`, `economic_info_json`, `housing_info_json`, `policy_info_json`, `status`, `is_deleted`, `created_by`, `create_time`, `updated_by`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.headName}, #{entity.headIdCard}, #{entity.addressCode}, #{entity.addressDetail}, #{entity.phone}, #{entity.populationCount}, #{entity.monitoringType}, #{entity.riskLevel}, #{entity.mainRiskTypes}, #{entity.economicInfoJson}, #{entity.housingInfoJson}, #{entity.policyInfoJson}, #{entity.status}, #{entity.isDeleted}, #{entity.createdBy}, #{entity.createTime}, #{entity.updatedBy}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_farmer_profile(`id`, `head_name`, `head_id_card`, `address_code`, `address_detail`, `phone`, `population_count`, `monitoring_type`, `risk_level`, `main_risk_types`, `economic_info_json`, `housing_info_json`, `policy_info_json`, `status`, `is_deleted`, `created_by`, `create_time`, `updated_by`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.headName}, #{entity.headIdCard}, #{entity.addressCode}, #{entity.addressDetail}, #{entity.phone}, #{entity.populationCount}, #{entity.monitoringType}, #{entity.riskLevel}, #{entity.mainRiskTypes}, #{entity.economicInfoJson}, #{entity.housingInfoJson}, #{entity.policyInfoJson}, #{entity.status}, #{entity.isDeleted}, #{entity.createdBy}, #{entity.createTime}, #{entity.updatedBy}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `head_name` = values(`head_name`),
+        `head_id_card` = values(`head_id_card`),
+        `address_code` = values(`address_code`),
+        `address_detail` = values(`address_detail`),
+        `phone` = values(`phone`),
+        `population_count` = values(`population_count`),
+        `monitoring_type` = values(`monitoring_type`),
+        `risk_level` = values(`risk_level`),
+        `main_risk_types` = values(`main_risk_types`),
+        `economic_info_json` = values(`economic_info_json`),
+        `housing_info_json` = values(`housing_info_json`),
+        `policy_info_json` = values(`policy_info_json`),
+        `status` = values(`status`),
+        `is_deleted` = values(`is_deleted`),
+        `created_by` = values(`created_by`),
+        `update_time` = values(`update_time`),
+        `updated_by` = values(`updated_by`)
+    </insert>
+
+    <update id="update">
+        update t_farmer_profile
+        <set>
+            <if test="headName != null and headName != ''">
+                `head_name` = #{headName},
+            </if>
+            <if test="headIdCard != null and headIdCard != ''">
+                `head_id_card` = #{headIdCard},
+            </if>
+            <if test="addressCode != null and addressCode != ''">
+                `address_code` = #{addressCode},
+            </if>
+            <if test="addressDetail != null and addressDetail != ''">
+                `address_detail` = #{addressDetail},
+            </if>
+            <if test="phone != null and phone != ''">
+                `phone` = #{phone},
+            </if>
+            <if test="populationCount != null">
+                `population_count` = #{populationCount},
+            </if>
+            <if test="monitoringType != null">
+                `monitoring_type` = #{monitoringType},
+            </if>
+            <if test="riskLevel != null">
+                `risk_level` = #{riskLevel},
+            </if>
+            <if test="mainRiskTypes != null">
+                `main_risk_types` = #{mainRiskTypes},
+            </if>
+            <if test="economicInfoJson != null">
+                `economic_info_json` = #{economicInfoJson},
+            </if>
+            <if test="housingInfoJson != null">
+                `housing_info_json` = #{housingInfoJson},
+            </if>
+            <if test="policyInfoJson != null">
+                `policy_info_json` = #{policyInfoJson},
+            </if>
+            <if test="status != null">
+                `status` = #{status},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createdBy != null">
+                `created_by` = #{createdBy},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updatedBy != null">
+                `updated_by` = #{updatedBy},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_farmer_profile
+        where `id` = #{id}
+    </delete>
+
+</mapper>

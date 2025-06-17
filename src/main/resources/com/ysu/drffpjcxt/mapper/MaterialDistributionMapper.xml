@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.drffpjcxt.mapper.MaterialDistributionMapper">
+
+    <resultMap type="com.ysu.drffpjcxt.entity.MaterialDistribution" id="TMaterialDistributionMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="applicationId" column="application_id" jdbcType="BIGINT"/>
+        <result property="recipientName" column="recipient_name" jdbcType="VARCHAR"/>
+        <result property="signatureUrl" column="signature_url" jdbcType="VARCHAR"/>
+        <result property="distributionTime" column="distribution_time" jdbcType="TIMESTAMP"/>
+        <result property="distributedBy" column="distributed_by" jdbcType="BIGINT"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="TMaterialDistributionMap">
+        select
+            `id`, `application_id`, `recipient_name`, `signature_url`, `distribution_time`, `distributed_by`, `is_deleted`, `create_time`, `update_time`
+        from t_material_distribution
+        where `id` = #{id}
+    </select>
+
+    <select id="queryAllByLimit" resultMap="TMaterialDistributionMap">
+        select
+        `id`, `application_id`, `recipient_name`, `signature_url`, `distribution_time`, `distributed_by`, `is_deleted`, `create_time`, `update_time`
+        from t_material_distribution
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="applicationId != null">
+                and `application_id` = #{applicationId}
+            </if>
+            <if test="recipientName != null and recipientName != ''">
+                and `recipient_name` = #{recipientName}
+            </if>
+            <if test="signatureUrl != null and signatureUrl != ''">
+                and `signature_url` = #{signatureUrl}
+            </if>
+            <if test="distributionTime != null">
+                and `distribution_time` = #{distributionTime}
+            </if>
+            <if test="distributedBy != null">
+                and `distributed_by` = #{distributedBy}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_material_distribution
+        <where>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="applicationId != null">
+                and `application_id` = #{applicationId}
+            </if>
+            <if test="recipientName != null and recipientName != ''">
+                and `recipient_name` = #{recipientName}
+            </if>
+            <if test="signatureUrl != null and signatureUrl != ''">
+                and `signature_url` = #{signatureUrl}
+            </if>
+            <if test="distributionTime != null">
+                and `distribution_time` = #{distributionTime}
+            </if>
+            <if test="distributedBy != null">
+                and `distributed_by` = #{distributedBy}
+            </if>
+            <if test="isDeleted != null">
+                and `is_deleted` = #{isDeleted}
+            </if>
+            <if test="createTime != null">
+                and `create_time` = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and `update_time` = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_material_distribution(`application_id`, `recipient_name`, `signature_url`, `distribution_time`, `distributed_by`, `is_deleted`, `create_time`, `update_time`)
+        values (#{applicationId}, #{recipientName}, #{signatureUrl}, #{distributionTime}, #{distributedBy}, #{isDeleted}, #{createTime}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_material_distribution(`application_id`, `recipient_name`, `signature_url`, `distribution_time`, `distributed_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.applicationId}, #{entity.recipientName}, #{entity.signatureUrl}, #{entity.distributionTime}, #{entity.distributedBy}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_material_distribution(`id`, `application_id`, `recipient_name`, `signature_url`, `distribution_time`, `distributed_by`, `is_deleted`, `create_time`, `update_time`)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.applicationId}, #{entity.recipientName}, #{entity.signatureUrl}, #{entity.distributionTime}, #{entity.distributedBy}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        `application_id` = values(`application_id`),
+        `recipient_name` = values(`recipient_name`),
+        `signature_url` = values(`signature_url`),
+        `distribution_time` = values(`distribution_time`),
+        `distributed_by` = values(`distributed_by`),
+        `is_deleted` = values(`is_deleted`),
+        `update_time` = values(`update_time`)
+    </insert>
+
+    <update id="update">
+        update t_material_distribution
+        <set>
+            <if test="applicationId != null">
+                `application_id` = #{applicationId},
+            </if>
+            <if test="recipientName != null and recipientName != ''">
+                `recipient_name` = #{recipientName},
+            </if>
+            <if test="signatureUrl != null and signatureUrl != ''">
+                `signature_url` = #{signatureUrl},
+            </if>
+            <if test="distributionTime != null">
+                `distribution_time` = #{distributionTime},
+            </if>
+            <if test="distributedBy != null">
+                `distributed_by` = #{distributedBy},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                `update_time` = #{updateTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from t_material_distribution
+        where `id` = #{id}
+    </delete>
+
+</mapper>
