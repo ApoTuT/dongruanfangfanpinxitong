@@ -57,6 +57,5 @@ public class AuthController {
         // 返回包含Token和用户信息的成功响应
         return ResponseEntity.ok(response);
     }
-    
-    // 可以在此处添加全局异常处理器来美化错误响应
+
 }
