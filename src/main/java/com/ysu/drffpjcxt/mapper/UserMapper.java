@@ -28,7 +28,7 @@ public interface UserMapper
     /**
      * 查询指定行数据
      *
-     * @param tUser    查询条件
+     * @param User    查询条件
      * @param pageable 分页对象
      * @return 对象列表
      */
@@ -82,6 +82,22 @@ public interface UserMapper
      * @return 影响行数
      */
     int deleteById(Object id);
+    /**
+     * 【新增】通过手机号查询单条数据 (未删除的记录)
+     * 用于注册时检查手机号唯一性及登录时获取用户信息。
+     *
+     * @param phone 手机号
+     * @return 实例对象
+     */
+    User findByPhone(@Param("phone") String phone);
 
+    /**
+     * 【新增】通过身份证号查询单条数据 (未删除的记录)
+     * 用于注册时检查身份证号唯一性。
+     *
+     * @param idCard 身份证号
+     * @return 实例对象
+     */
+    User findByIdCard(@Param("idCard") String idCard);
 }
 

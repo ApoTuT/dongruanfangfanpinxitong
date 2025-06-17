@@ -275,5 +275,18 @@
         from t_user
         where `id` = #{id}
     </delete>
+    <select id="findByPhone" resultMap="TUserMap">
+        select
+            `id`, `employee_id`, `real_name`, `phone`, `password`, `id_card`, `email`, `avatar_url`, `province_code`, `city_code`, `county_code`, `township_code`, `village_code`, `department_code`, `department_name`, `status`, `is_deleted`, `create_time`, `update_time`
+        from t_user
+        where `phone` = #{phone} and `is_deleted` = 0
+    </select>
 
+    <!-- 【新增】通过身份证号查询 -->
+    <select id="findByIdCard" resultMap="TUserMap">
+        select
+            `id`, `employee_id`, `real_name`, `phone`, `password`, `id_card`, `email`, `avatar_url`, `province_code`, `city_code`, `county_code`, `township_code`, `village_code`, `department_code`, `department_name`, `status`, `is_deleted`, `create_time`, `update_time`
+        from t_user
+        where `id_card` = #{idCard} and `is_deleted` = 0
+    </select>
 </mapper>
