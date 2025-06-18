@@ -1,17 +1,19 @@
 package com.ysu.drffpjcxt.controller;
 
-import com.ysu.drffpjcxt.entity.dto.LoginRequest;
-import com.ysu.drffpjcxt.entity.dto.UserRegisterRequest;
+import com.ysu.drffpjcxt.entity.dto.auth.ChangePasswordRequest;
+import com.ysu.drffpjcxt.entity.dto.auth.LoginRequest;
+import com.ysu.drffpjcxt.entity.dto.auth.PasswordResetRequest;
+import com.ysu.drffpjcxt.entity.dto.auth.UserRegisterRequest;
 import com.ysu.drffpjcxt.service.auth.AuthService;
 import com.ysu.drffpjcxt.entity.vo.LoginResponseVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 /**
  * @Description: 认证API控制器，提供用户注册和登录接口。
@@ -58,4 +60,29 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @ApiOperation("忘记密码 - 发送验证码")
+    @PostMapping("/forgot-password/send-code")
+    public ResponseEntity<String> sendCode(
+            @ApiParam(value = "用户注册的手机号") @RequestParam String phone) {
+        String code = authService.sendPasswordResetCode(phone);
+        if (code == null) {
+            return ResponseEntity.badRequest().body("验证码发送失败，请稍后再试。");
+        }
+        String responseMessage = String.format(code);
+        return ResponseEntity.ok(responseMessage);
+    }
+
+    @ApiOperation("忘记密码 - 重置密码")
+    @PostMapping("/forgot-password/reset")
+    public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok("密码重置成功！");
+    }
+
+    @ApiOperation("修改密码 (需要登录)")
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(Principal principal, @RequestBody ChangePasswordRequest request) {
+        authService.changePassword(principal, request);
+        return ResponseEntity.ok("密码修改成功！");
+    }
 }

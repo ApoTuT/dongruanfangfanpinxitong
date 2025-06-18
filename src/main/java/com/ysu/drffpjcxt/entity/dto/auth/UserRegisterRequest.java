@@ -1,4 +1,4 @@
-package com.ysu.drffpjcxt.entity.dto;
+package com.ysu.drffpjcxt.entity.dto.auth;
 
 import lombok.Data;
 import io.swagger.annotations.ApiModel;

@@ -48,7 +48,7 @@ public class SecurityConfig {
             .authorizeRequests(authorize -> authorize
                 // 4. 对登录和注册接口允许所有用户访问（包括未认证的匿名用户）。
                 // 这是解决您问题的关键！
-                .antMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                .antMatchers("/api/auth/register", "/api/auth/login","/api/auth/forgot-password/**").permitAll()
 
                 // 5. 除了上面明确放行的URL，其他所有请求都必须经过认证才能访问。
                 .anyRequest().authenticated()

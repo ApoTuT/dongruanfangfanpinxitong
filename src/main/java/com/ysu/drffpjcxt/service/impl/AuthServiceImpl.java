@@ -1,8 +1,8 @@
 package com.ysu.drffpjcxt.service.impl;
 
-import com.ysu.drffpjcxt.entity.dto.LoginRequest;
-import com.ysu.drffpjcxt.entity.dto.UserRegisterRequest;
+import com.ysu.drffpjcxt.entity.dto.auth.*;
 import com.ysu.drffpjcxt.entity.User;
+import com.ysu.drffpjcxt.entity.redis.IRedisService;
 import com.ysu.drffpjcxt.exception.auth.AuthException;
 import com.ysu.drffpjcxt.exception.auth.RegistrationException;
 import com.ysu.drffpjcxt.mapper.UserMapper;
@@ -12,12 +12,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -29,6 +34,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private IRedisService redisService;
+
+    /**
+     * Redis中存储密码重置验证码的键的前缀。
+     */
+    private static final String RESET_CODE_PREFIX = "password:reset:";
+
+    /**
+     * 密码重置验证码的有效期（分钟）。
+     */
+    private static final long RESET_CODE_EXPIRY_MINUTES = 5;
 
     @Override
     public void register(UserRegisterRequest request) {
@@ -112,5 +130,74 @@ public class AuthServiceImpl implements AuthService {
     private List<String> findUserPermissions(Long userId) {
         // TODO: 实现真实的数据库查询逻辑
         return Collections.singletonList("profile:view");
+    }
+
+    @Override
+    public String sendPasswordResetCode(String phone) {
+        if (!StringUtils.hasText(phone)) {
+            throw new AuthException("手机号不能为空");
+        }
+        User user = userMapper.findByPhone(phone);
+        if (user == null) {
+            throw new AuthException("该手机号未注册");
+        }
+
+        String code = String.format("%06d", new Random().nextInt(999999));
+        String redisKey = RESET_CODE_PREFIX + phone;
+
+        // 【修改】调用新的 redisService.setValue 方法
+        // 将过期时间从分钟转换为毫秒
+        long expiryInMillis = TimeUnit.MINUTES.toMillis(RESET_CODE_EXPIRY_MINUTES);
+        redisService.setValue(redisKey, code, expiryInMillis);
+
+        // **模拟发送短信**
+        log.warn("【模拟短信发送】发送密码重置验证码到 {}: {}", phone, code);
+        return code;
+    }
+
+    @Override
+    public void resetPassword(PasswordResetRequest request) {
+        String redisKey = RESET_CODE_PREFIX + request.getPhone();
+
+        // 【修改】调用新的 redisService.getValue 方法
+        String storedCode = redisService.getValue(redisKey);
+
+        if (!StringUtils.hasText(storedCode)) {
+            throw new AuthException("验证码已过期，请重新发送");
+        }
+        if (!storedCode.equals(request.getCode())) {
+            throw new AuthException("验证码不正确");
+        }
+
+        User user = userMapper.findByPhone(request.getPhone());
+        if (user == null) {
+            throw new AuthException("用户不存在");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setUpdateTime(new Date());
+        userMapper.update(user);
+
+        // 【修改】调用新的 redisService.remove 方法
+        redisService.remove(redisKey);
+        log.info("用户密码重置成功，手机号: {}", request.getPhone());
+    }
+
+    @Override
+    public void changePassword(Principal principal, ChangePasswordRequest request) {
+        String phone = principal.getName();
+        User user = userMapper.findByPhone(phone);
+
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new AuthException("旧密码不正确");
+        }
+        if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+            throw new AuthException("两次输入的新密码不一致");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setUpdateTime(new Date());
+        userMapper.update(user);
+        log.info("用户密码修改成功，手机号: {}", phone);
     }
 }
