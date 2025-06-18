@@ -1,5 +1,6 @@
-package com.ysu.drffpjcxt.service.impl;
+package com.ysu.drffpjcxt.service.impl.auth;
 
+import com.ysu.drffpjcxt.common.JwtUtil;
 import com.ysu.drffpjcxt.entity.dto.auth.*;
 import com.ysu.drffpjcxt.entity.User;
 import com.ysu.drffpjcxt.entity.redis.IRedisService;
@@ -7,21 +8,18 @@ import com.ysu.drffpjcxt.exception.auth.AuthException;
 import com.ysu.drffpjcxt.exception.auth.RegistrationException;
 import com.ysu.drffpjcxt.mapper.UserMapper;
 import com.ysu.drffpjcxt.service.auth.AuthService;
-import com.ysu.drffpjcxt.entity.vo.LoginResponseVO;
+import com.ysu.drffpjcxt.entity.vo.auth.LoginResponseVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.security.Principal;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -38,6 +36,8 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private IRedisService redisService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
     /**
      * Redis中存储密码重置验证码的键的前缀。
      */
@@ -93,7 +93,16 @@ public class AuthServiceImpl implements AuthService {
         // 检查账户状态并抛出相应的异常
         validateUserStatus(user);
 
-        String token = "dummy-jwt-for-" + user.getPhone() + System.currentTimeMillis();
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                user.getPhone(),
+                user.getPassword(),
+                new ArrayList<>() // 权限列表，暂时为空
+        );
+
+        // 使用 JwtUtil 生成一个真实的JWT
+        String token = jwtUtil.generateToken(userDetails);
+        // -- 【核心修正】结束 --
+
         List<String> roles = findUserRoles(user.getId());
         List<String> permissions = findUserPermissions(user.getId());
 

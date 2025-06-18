@@ -9,9 +9,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 /**
  * @Description: Spring Security 配置类
- * @Author: Gemini
+ * @Author: sheng
  * @Date: 2025-06-17
  *
  * 用于配置哪些URL需要认证，哪些可以匿名访问。
@@ -49,8 +50,7 @@ public class SecurityConfig {
                 // 4. 对登录和注册接口允许所有用户访问（包括未认证的匿名用户）。
                 // 这是解决您问题的关键！
                 .antMatchers("/api/auth/register", "/api/auth/login","/api/auth/forgot-password/**").permitAll()
-
-                // 5. 除了上面明确放行的URL，其他所有请求都必须经过认证才能访问。
+                    // 5. 除了上面明确放行的URL，其他所有请求都必须经过认证才能访问。
                 .anyRequest().authenticated()
             );
 

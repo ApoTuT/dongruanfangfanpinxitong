@@ -166,8 +166,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into t_user(`id`, `employee_id`, `real_name`, `phone`, `password`, `id_card`, `email`, `avatar_url`, `province_code`, `city_code`, `county_code`, `township_code`, `village_code`, `department_code`, `department_name`, `status`, `is_deleted`, `create_time`, `update_time`)
-        values (#{id}, #{employeeId}, #{realName}, #{phone}, #{password}, #{idCard}, #{email}, #{avatarUrl}, #{provinceCode}, #{cityCode}, #{countyCode}, #{townshipCode}, #{villageCode}, #{departmentCode}, #{departmentName}, #{status}, #{isDeleted}, #{createTime}, #{updateTime})
+        insert into t_user(`employee_id`, `real_name`, `phone`, `password`, `id_card`, `email`, `avatar_url`, `province_code`, `city_code`, `county_code`, `township_code`, `village_code`, `department_code`, `department_name`, `status`, `is_deleted`, `create_time`, `update_time`)
+        values (#{employeeId}, #{realName}, #{phone}, #{password}, #{idCard}, #{email}, #{avatarUrl}, #{provinceCode}, #{cityCode}, #{countyCode}, #{townshipCode}, #{villageCode}, #{departmentCode}, #{departmentName}, #{status}, #{isDeleted}, #{createTime}, #{updateTime})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">

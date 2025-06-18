@@ -1,6 +1,5 @@
-package com.ysu.drffpjcxt.entity.vo;
+package com.ysu.drffpjcxt.entity.vo.auth;
 
-import com.ysu.drffpjcxt.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

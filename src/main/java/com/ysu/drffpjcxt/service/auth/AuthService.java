@@ -1,7 +1,7 @@
 package com.ysu.drffpjcxt.service.auth;
 
 import com.ysu.drffpjcxt.entity.dto.auth.*;
-import com.ysu.drffpjcxt.entity.vo.LoginResponseVO;
+import com.ysu.drffpjcxt.entity.vo.auth.LoginResponseVO;
 
 import java.security.Principal;
 

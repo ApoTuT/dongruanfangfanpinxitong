@@ -1,8 +1,12 @@
 package com.ysu.drffpjcxt.service;
 
 import com.ysu.drffpjcxt.entity.User;
+import com.ysu.drffpjcxt.entity.dto.user.UserProfileUpdateRequest;
+import com.ysu.drffpjcxt.entity.vo.user.UserProfileVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+
+import java.security.Principal;
 
 /**
  * 用户基础信息表(User)表服务接口
@@ -54,4 +58,18 @@ public interface UserService
      */
     boolean deleteById(Object id);
 
+    /**
+     * 【新增】获取当前登录用户的个人资料
+     * @param principal Spring Security 提供的凭证对象
+     * @return 用户个人资料视图对象
+     */
+    UserProfileVO getUserProfile(Principal principal);
+
+    /**
+     * 【新增】更新当前登录用户的个人资料
+     * @param principal Spring Security 提供的凭证对象
+     * @param request 包含待更新信息的数据传输对象
+     * @return 更新后的用户个人资料视图对象
+     */
+    UserProfileVO updateUserProfile(Principal principal, UserProfileUpdateRequest request);
 }

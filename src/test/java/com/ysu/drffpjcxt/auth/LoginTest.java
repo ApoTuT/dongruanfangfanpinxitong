@@ -1,6 +1,6 @@
 package com.ysu.drffpjcxt.auth;
 
-import com.ysu.drffpjcxt.controller.AuthController;
+import com.ysu.drffpjcxt.controller.auth.AuthController;
 import com.ysu.drffpjcxt.entity.dto.auth.PasswordResetRequest;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

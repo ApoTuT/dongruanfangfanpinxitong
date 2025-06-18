@@ -1,11 +1,11 @@
-package com.ysu.drffpjcxt.controller;
+package com.ysu.drffpjcxt.controller.auth;
 
 import com.ysu.drffpjcxt.entity.dto.auth.ChangePasswordRequest;
 import com.ysu.drffpjcxt.entity.dto.auth.LoginRequest;
 import com.ysu.drffpjcxt.entity.dto.auth.PasswordResetRequest;
 import com.ysu.drffpjcxt.entity.dto.auth.UserRegisterRequest;
 import com.ysu.drffpjcxt.service.auth.AuthService;
-import com.ysu.drffpjcxt.entity.vo.LoginResponseVO;
+import com.ysu.drffpjcxt.entity.vo.auth.LoginResponseVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
