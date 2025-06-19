@@ -83,5 +83,7 @@ public interface SupportPlanMapper
      */
     int deleteById(Object id);
 
+
+    void softDeleteById(Long id);
 }
 

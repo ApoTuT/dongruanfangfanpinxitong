@@ -169,5 +169,22 @@
         from t_support_measure
         where `id` = #{id}
     </delete>
+    <select id="queryByPlanId" resultMap="TSupportMeasureMap">
+        select
+            id, plan_id, measure_type, measure_content, responsible_id, budget_amount, status, is_deleted, create_time, update_time
+        from t_support_measure
+        where plan_id = #{planId} and is_deleted = 0
+    </select>
+    <update id="softDeleteByPlanId">
+        update t_support_measure
+        set is_deleted = 1
+        where plan_id = #{planId}
+    </update>
+
+    <update id="softDeleteById">
+        update t_support_measure
+        set is_deleted = 1
+        where id = #{id}
+    </update>
 
 </mapper>

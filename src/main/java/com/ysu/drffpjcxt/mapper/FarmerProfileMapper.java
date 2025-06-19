@@ -1,6 +1,7 @@
 package com.ysu.drffpjcxt.mapper;
 
 
+import com.ysu.drffpjcxt.entity.FarmerProfile;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public interface FarmerProfileMapper
      * @param id 主键
      * @return 实例对象
      */
-    FarmerProfileMapper queryById(Object id);
+    FarmerProfile queryById(Object id);
 
     /**
      * 查询指定行数据

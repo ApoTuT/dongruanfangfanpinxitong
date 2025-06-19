@@ -181,4 +181,9 @@
         where `id` = #{id}
     </delete>
 
+    <update id="softDeleteById">
+        update t_support_plan
+        set `is_deleted` = 1, `update_time` = CURRENT_TIMESTAMP
+        where `id` = #{id}
+    </update>
 </mapper>
