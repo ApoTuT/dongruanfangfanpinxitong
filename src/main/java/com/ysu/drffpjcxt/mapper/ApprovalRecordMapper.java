@@ -83,5 +83,13 @@ public interface ApprovalRecordMapper
      */
     int deleteById(Object id);
 
-}
+    /**
+     * 通过实体类型和实体ID查询审批记录
+     *
+     * @param businessType 业务类型（实体类型）
+     * @param businessId 业务ID（实体ID）
+     * @return 审批记录列表
+     */
+    List<ApprovalRecord> findByEntity(@Param("businessType") String businessType, @Param("businessId") Long businessId);
 
+}

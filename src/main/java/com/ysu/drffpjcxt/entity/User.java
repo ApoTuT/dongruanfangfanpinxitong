@@ -1,6 +1,10 @@
 package com.ysu.drffpjcxt.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,6 +15,9 @@ import java.util.Date;
  * @since 2025-06-12 10:09:28
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
     private static final long serialVersionUID = 550526848760585999L;
 

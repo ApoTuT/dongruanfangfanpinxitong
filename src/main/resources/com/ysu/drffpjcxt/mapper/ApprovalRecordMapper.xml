@@ -179,4 +179,15 @@
         where `id` = #{id}
     </delete>
 
+    <!-- 通过实体类型和实体ID查询审批记录 -->
+    <select id="findByEntity" resultMap="TApprovalRecordMap">
+        select
+            `id`, `business_type`, `business_id`, `step_name`, `approver_id`, `result`, `comments`, `approval_time`, `is_deleted`, `create_time`, `update_time`
+        from t_approval_record
+        where `business_type` = #{businessType}
+        and `business_id` = #{businessId}
+        and `is_deleted` = 0
+        order by `create_time` desc
+    </select>
+
 </mapper>

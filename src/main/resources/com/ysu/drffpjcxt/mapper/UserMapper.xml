@@ -289,4 +289,11 @@
         from t_user
         where `id_card` = #{idCard} and `is_deleted` = 0
     </select>
+
+    <select id="selectByUsername" resultType="com.ysu.drffpjcxt.entity.User">
+        select
+            id, employee_id, real_name, phone, password, id_card, email, province_code, city_code, county_code, town_code, village_code, address, status, created_at, updated_at
+        from t_user
+        where phone = #{username} and is_deleted = 0
+    </select>
 </mapper>

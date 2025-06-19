@@ -1,6 +1,7 @@
 package com.ysu.drffpjcxt.service;
 
 import com.ysu.drffpjcxt.entity.SupportPlan;
+import com.ysu.drffpjcxt.entity.dto.support.ApprovalRequest;
 import com.ysu.drffpjcxt.entity.dto.support.SupportPlanSaveRequest;
 import com.ysu.drffpjcxt.entity.vo.support.SupportPlanDetailVO;
 import org.springframework.data.domain.Page;
@@ -87,4 +88,11 @@ public interface SupportPlanService
      */
     void deleteSupportPlanById(Long id);
 
+    /**
+     * (新增) 审批一个帮扶计划。
+     * @param planId 要审批的计划ID
+     * @param request 包含审批结果和意见的请求对象
+     * @param principal 当前操作用户
+     */
+    void approvePlan(Long planId, ApprovalRequest request, Principal principal);
 }

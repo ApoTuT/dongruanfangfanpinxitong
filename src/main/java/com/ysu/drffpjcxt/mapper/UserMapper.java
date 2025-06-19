@@ -99,5 +99,7 @@ public interface UserMapper
      * @return 实例对象
      */
     User findByIdCard(@Param("idCard") String idCard);
+
+    User selectByUsername(String username);
 }
 

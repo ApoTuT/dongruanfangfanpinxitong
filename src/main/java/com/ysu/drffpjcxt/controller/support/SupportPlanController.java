@@ -1,12 +1,15 @@
 package com.ysu.drffpjcxt.controller.support;
 
+import com.ysu.drffpjcxt.entity.dto.support.ApprovalRequest;
 import com.ysu.drffpjcxt.entity.dto.support.SupportPlanSaveRequest;
 import com.ysu.drffpjcxt.entity.vo.support.SupportPlanDetailVO;
 import com.ysu.drffpjcxt.service.SupportPlanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -59,6 +62,23 @@ public class SupportPlanController {
             return ResponseEntity.ok().body(Collections.singletonMap("message", "删除成功"));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/approval")
+    @ApiOperation("审批帮扶计划 (需要县级干部权限)")
+    public ResponseEntity<?> approvePlan(@RequestParam Long id,
+                                         @RequestBody ApprovalRequest request,
+                                         Principal principal) {
+        try {
+            supportPlanService.approvePlan(id, request, principal);
+            return ResponseEntity.ok(Collections.singletonMap("message", "审批操作成功"));
+        } catch (IllegalArgumentException e) {
+            // 处理断言失败，如计划不存在或状态不正确
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (AccessDeniedException e) {
+            // 由Spring Security自动抛出，处理权限不足的情况
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("权限不足，无法执行审批操作");
         }
     }
 }

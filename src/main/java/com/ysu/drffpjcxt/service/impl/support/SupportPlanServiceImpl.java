@@ -1,21 +1,17 @@
 package com.ysu.drffpjcxt.service.impl.support;
 
-import com.ysu.drffpjcxt.entity.FarmerProfile;
-import com.ysu.drffpjcxt.entity.SupportMeasure;
-import com.ysu.drffpjcxt.entity.SupportPlan;
-import com.ysu.drffpjcxt.entity.User;
+import com.ysu.drffpjcxt.entity.*;
+import com.ysu.drffpjcxt.entity.dto.support.ApprovalRequest;
 import com.ysu.drffpjcxt.entity.dto.support.SupportMeasureDTO;
 import com.ysu.drffpjcxt.entity.dto.support.SupportPlanSaveRequest;
 import com.ysu.drffpjcxt.entity.vo.support.SupportPlanDetailVO;
-import com.ysu.drffpjcxt.mapper.FarmerProfileMapper;
-import com.ysu.drffpjcxt.mapper.SupportMeasureMapper;
-import com.ysu.drffpjcxt.mapper.SupportPlanMapper;
-import com.ysu.drffpjcxt.mapper.UserMapper;
+import com.ysu.drffpjcxt.mapper.*;
 import com.ysu.drffpjcxt.service.SupportPlanService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -33,7 +29,8 @@ public class SupportPlanServiceImpl implements SupportPlanService {
     private SupportMeasureMapper supportMeasureMapper;
     @Autowired
     private UserMapper userMapper;
-
+    @Autowired
+    private ApprovalRecordMapper approvalRecordMapper;
     @Autowired
     private FarmerProfileMapper farmerProfileMapper;
     // 假设此处会实现 queryById、update 等其他方法。
@@ -175,5 +172,38 @@ public class SupportPlanServiceImpl implements SupportPlanService {
 
         // 3. 逻辑删除所有关联的措施
         supportMeasureMapper.softDeleteByPlanId(id);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ROLE_COUNTY_CADRE')") // **核心权限校验：只允许有'ROLE_COUNTY_CADRE'角色的用户调用**
+    public void approvePlan(Long planId, ApprovalRequest request, Principal principal) {
+        // 1. 获取当前操作用户（审批人）
+        User approver = userMapper.findByPhone(principal.getName());
+        Assert.notNull(approver, "无法获取当前审批人信息");
+
+        // 2. 获取并验证帮扶计划
+        SupportPlan plan = supportPlanMapper.queryById(planId);
+        Assert.notNull(plan, "审批的帮扶计划不存在");
+        Assert.isTrue("待审批".equals(plan.getStatus()), "该计划不是待审批状态，无法操作");
+
+        // 3. 更新帮扶计划的状态
+        plan.setStatus(request.getApproved() ? "已批准" : "已驳回");
+        plan.setUpdateTime(new Date()); // 或使用数据库的 NOW()
+        supportPlanMapper.update(plan);
+
+        // 4. 创建并保存审批记录，用于审计和追溯
+        ApprovalRecord approvalRecord = new ApprovalRecord();
+        approvalRecord.setBusinessType("SUPPORT_PLAN"); // 标记实体类型
+        approvalRecord.setBusinessId(planId); // 修正：使用 setBusinessId 而不是 setId
+        approvalRecord.setApproverId(approver.getId());
+        approvalRecord.setComments(request.getComments());
+        approvalRecord.setApprovalTime(new Date());
+        approvalRecord.setResult(request.getApproved() ? 1 : 2); // 1-通过, 2-驳回
+        approvalRecord.setIsDeleted(false);
+        approvalRecord.setCreateTime(new Date());
+        approvalRecord.setUpdateTime(new Date());
+
+        approvalRecordMapper.insert(approvalRecord);
     }
 }

@@ -131,4 +131,13 @@
         where `id` = #{id}
     </delete>
 
+    <!--通过用户ID查询用户角色关联记录-->
+    <select id="findByUserId" resultMap="TUserRoleMap">
+        select
+            `id`, `user_id`, `role_id`, `is_deleted`, `create_time`, `update_time`
+        from t_user_role
+        where `user_id` = #{userId}
+        and `is_deleted` = 0
+    </select>
+
 </mapper>

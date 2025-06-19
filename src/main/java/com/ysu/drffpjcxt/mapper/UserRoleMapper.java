@@ -83,5 +83,12 @@ public interface UserRoleMapper
      */
     int deleteById(Object id);
 
-}
+    /**
+     * 通过用户ID查询用户角色关联记录
+     *
+     * @param userId 用户ID
+     * @return 用户角色关联记录列表
+     */
+    List<UserRole> findByUserId(Long userId);
 
+}
