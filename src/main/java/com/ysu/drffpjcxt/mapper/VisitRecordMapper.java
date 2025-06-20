@@ -1,6 +1,8 @@
 package com.ysu.drffpjcxt.mapper;
 
 import com.ysu.drffpjcxt.entity.VisitRecord;
+import com.ysu.drffpjcxt.entity.dto.visit.VisitRecordQueryDTO;
+import com.ysu.drffpjcxt.entity.vo.visit.VisitRecordVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
@@ -43,14 +45,6 @@ public interface VisitRecordMapper
     long count(VisitRecord VisitRecord);
 
     /**
-     * 新增数据
-     *
-     * @param VisitRecord 实例对象
-     * @return 影响行数
-     */
-    int insert(VisitRecord VisitRecord);
-
-    /**
      * 批量新增数据（MyBatis原生foreach方法）
      *
      * @param entities List<VisitRecord> 实例对象列表
@@ -83,5 +77,19 @@ public interface VisitRecordMapper
      */
     int deleteById(Object id);
 
-}
+    /**
+     * 新增走访记录
+     */
+    int insert(VisitRecord visitRecord);
 
+    /**
+     * 根据ID软删除走访记录
+     */
+    int softDeleteById(@Param("recordId") Long recordId, @Param("updateBy") String updateBy);
+
+    /**
+     * 根据条件查询走访记录列表
+     */
+    List<VisitRecordVO> selectByQuery(VisitRecordQueryDTO queryDTO);
+
+}

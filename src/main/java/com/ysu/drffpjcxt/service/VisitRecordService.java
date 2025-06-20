@@ -1,6 +1,10 @@
 package com.ysu.drffpjcxt.service;
 
+import com.github.pagehelper.PageInfo;
 import com.ysu.drffpjcxt.entity.VisitRecord;
+import com.ysu.drffpjcxt.entity.dto.visit.VisitRecordAddDTO;
+import com.ysu.drffpjcxt.entity.dto.visit.VisitRecordQueryDTO;
+import com.ysu.drffpjcxt.entity.vo.visit.VisitRecordVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -12,46 +16,18 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface VisitRecordService
 {
+    /**
+     * 新增走访记录
+     */
+    boolean addVisitRecord(VisitRecordAddDTO addDTO);
 
     /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
+     * 软删除走访记录
      */
-    VisitRecord queryById(Object id);
+    boolean deleteVisitRecord(Long recordId);
 
     /**
-     * 分页查询
-     *
-     * @param tVisitRecord 筛选条件
-     * @param pageRequest  分页对象
-     * @return 查询结果
+     * 查询走访记录
      */
-    Page<VisitRecord> queryByPage(VisitRecord tVisitRecord, PageRequest pageRequest);
-
-    /**
-     * 新增数据
-     *
-     * @param tVisitRecord 实例对象
-     * @return 实例对象
-     */
-    VisitRecord insert(VisitRecord tVisitRecord);
-
-    /**
-     * 修改数据
-     *
-     * @param tVisitRecord 实例对象
-     * @return 实例对象
-     */
-    VisitRecord update(VisitRecord tVisitRecord);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 是否成功
-     */
-    boolean deleteById(Object id);
-
+    PageInfo<VisitRecordVO> getVisitRecords(VisitRecordQueryDTO queryDTO);
 }

@@ -122,12 +122,6 @@
         </where>
     </select>
 
-    <!--新增所有列-->
-    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into t_visit_record(`id`, `plan_id`, `farmer_id`, `visitor_id`, `visit_date`, `visit_content`, `problems_found`, `farmer_requests`, `follow_up_action`, `status`, `is_deleted`, `create_time`, `update_time`)
-        values (#{id}, #{planId}, #{farmerId}, #{visitorId}, #{visitDate}, #{visitContent}, #{problemsFound}, #{farmerRequests}, #{followUpAction}, #{status}, #{isDeleted}, #{createTime}, #{updateTime})
-    </insert>
-
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
         insert into
         t_visit_record(`id`, `plan_id`, `farmer_id`, `visitor_id`, `visit_date`, `visit_content`, `problems_found`, `farmer_requests`, `follow_up_action`, `status`, `is_deleted`, `create_time`, `update_time`)
@@ -210,4 +204,47 @@
         where `id` = #{id}
     </delete>
 
+    <insert id="insert" parameterType="com.ysu.drffpjcxt.entity.VisitRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_visit_record (plan_id, farmer_id, visitor_id, visit_date, visit_content, problems_found, farmer_requests, follow_up_action, status)
+        VALUES (#{planId}, #{farmerId}, #{visitorId}, #{visitDate}, #{visitContent}, #{problemsFound}, #{farmerRequests}, #{followUpAction}, #{status})
+    </insert>
+
+    <update id="softDeleteById">
+        UPDATE t_visit_record
+        SET is_deleted = 1, update_time = NOW()
+        WHERE id = #{recordId} AND is_deleted = 0
+    </update>
+
+    <select id="selectByQuery" resultType="com.ysu.drffpjcxt.entity.vo.visit.VisitRecordVO">
+        SELECT
+        tvr.id,
+        tvr.plan_id,
+        tvr.farmer_id,
+        tfp.head_name AS farmerName,
+        tvr.visit_date,
+        tvr.visit_content,
+        tvr.create_time,
+        tu.real_name as create_by
+        FROM
+        t_visit_record tvr
+        LEFT JOIN
+        t_farmer_profile tfp ON tvr.farmer_id = tfp.id
+        LEFT JOIN t_user tu on tvr.visitor_id = tu.id
+        WHERE
+        tvr.is_deleted = 0
+        <if test="farmerId != null">
+            AND tvr.farmer_id = #{farmerId}
+        </if>
+        <if test="farmerName != null and farmerName != ''">
+            AND tfp.head_name LIKE CONCAT('%', #{farmerName}, '%')
+        </if>
+        <if test="visitorId != null">
+            AND tvr.visitor_id = #{visitorId}
+        </if>
+        <if test="userName != null and userName != ''">
+            AND tu.real_name LIKE CONCAT('%', #{userName}, '%')
+        </if>
+        ORDER BY
+        tvr.visit_date DESC
+    </select>
 </mapper>

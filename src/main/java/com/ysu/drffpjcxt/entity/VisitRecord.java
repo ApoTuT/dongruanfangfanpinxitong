@@ -1,6 +1,10 @@
 package com.ysu.drffpjcxt.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,9 +15,10 @@ import java.util.Date;
  * @since 2025-06-12 10:09:29
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class VisitRecord implements Serializable {
-    private static final long serialVersionUID = -72968571489750359L;
-
     /**
      * 走访记录ID
      */
