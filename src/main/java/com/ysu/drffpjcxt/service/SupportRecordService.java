@@ -1,57 +1,31 @@
 package com.ysu.drffpjcxt.service;
 
-import com.ysu.drffpjcxt.entity.SupportRecord;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.ysu.drffpjcxt.entity.dto.support.SupportRecordSaveRequest;
+import java.security.Principal;
 
 /**
- * 帮扶记录表(SupportRecord)表服务接口
- *
- * @author makejava
- * @since 2025-06-12 10:09:27
+ * 帮扶记录服务接口
  */
-public interface SupportRecordService
-{
+public interface SupportRecordService {
 
     /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
+     * 填报帮扶记录
+     * @param request 填报请求对象
+     * @param principal 当前登录用户
      */
-    SupportRecord queryById(Object id);
+    void createSupportRecord(SupportRecordSaveRequest request, Principal principal);
+
 
     /**
-     * 分页查询
-     *
-     * @param tSupportRecord 筛选条件
-     * @param pageRequest    分页对象
-     * @return 查询结果
+     * 查询所有帮扶记录
+     * @return 帮扶记录列表
      */
-    Page<SupportRecord> queryByPage(SupportRecord tSupportRecord, PageRequest pageRequest);
+    Object getAllSupportRecords();
 
     /**
-     * 新增数据
-     *
-     * @param tSupportRecord 实例对象
-     * @return 实例对象
+     * 根据ID查询帮扶记录
+     * @param id 记录ID
+     * @return 帮扶记录
      */
-    SupportRecord insert(SupportRecord tSupportRecord);
-
-    /**
-     * 修改数据
-     *
-     * @param tSupportRecord 实例对象
-     * @return 实例对象
-     */
-    SupportRecord update(SupportRecord tSupportRecord);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 是否成功
-     */
-    boolean deleteById(Object id);
-
+    Object getSupportRecordById(Long id);
 }

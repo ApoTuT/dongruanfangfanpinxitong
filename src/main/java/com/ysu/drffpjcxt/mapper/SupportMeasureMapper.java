@@ -92,5 +92,7 @@ public interface SupportMeasureMapper
      * @return 受影响的行数
      */
     int softDeleteByPlanId(Long planId);
-}
 
+    void updateStatus(@Param("id") Long id, @Param("status") String status);
+
+}

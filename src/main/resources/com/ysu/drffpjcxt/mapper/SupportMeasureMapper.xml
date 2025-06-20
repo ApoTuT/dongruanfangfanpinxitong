@@ -187,4 +187,10 @@
         where id = #{id}
     </update>
 
+    <update id="updateStatus">
+        update t_support_measure
+        set status = #{status}, update_time = NOW()
+        where id = #{id}
+    </update>
+
 </mapper>

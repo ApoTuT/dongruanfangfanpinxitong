@@ -97,4 +97,6 @@ public interface SupportPlanMapper
      * @return 带有农户名称和计划制定人名称的帮扶计划列表
      */
     List<SupportPlan> queryAllActiveWithNames();
+
+    void updateStatus(@Param("id") Long id, @Param("status") String status);
 }
