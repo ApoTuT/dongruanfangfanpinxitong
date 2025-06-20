@@ -16,10 +16,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 /**
  * Spring Security 配置类
- * 用于配置URL授权规则、认证过滤器及其他安全相关的核心组件。
+ * 兼容Spring Security 5.x版本
  */
 @Configuration
 @EnableWebSecurity
@@ -60,26 +65,72 @@ public class SecurityConfig {
     }
 
     /**
-     * 配置安全过滤器链，定义所有HTTP请求的安全处理规则。
+     * CORS配置
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // 允许的源
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+
+        // 允许的HTTP方法
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // 关键：明确允许Authorization头
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With",
+                "Accept",
+                "Origin",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers"
+        ));
+
+        // 允许发送凭证
+        configuration.setAllowCredentials(true);
+
+        // 预检请求缓存时间
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
+    /**
+     * 配置安全过滤器链 - Spring Security 5.x版本
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 关闭CSRF保护，因为我们使用无状态的JWT认证。
+                // 启用CORS支持
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
+
+                // 关闭CSRF保护
                 .csrf().disable()
-                // 配置URL的授权规则。
-                .authorizeRequests(authorize -> authorize
-                        // 对所有以 "/api/auth/" 开头的URL（如注册、登录、忘记密码）允许匿名访问。
-                        .antMatchers("/api/auth/**").permitAll()
-                        // 除了上述放行的URL外，其他所有请求都必须经过认证。
-                        .anyRequest().authenticated()
-                )
-                // 设置会话管理策略为“无状态”，服务器不创建或使用Session。
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // 注册我们自定义的认证提供者。
+
+                // 配置URL的授权规则 - 使用antMatchers
+                .authorizeRequests()
+                // 对所有以 "/api/auth/" 开头的URL允许匿名访问
+                .antMatchers("/api/auth/**").permitAll()
+                // 允许OPTIONS请求（CORS预检请求）
+                .antMatchers("OPTIONS", "/**").permitAll()
+                // 其他所有请求都必须经过认证
+                .anyRequest().authenticated()
+                .and()
+
+                // 设置会话管理策略为"无状态"
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+
+                // 注册自定义的认证提供者
                 .authenticationProvider(authenticationProvider())
-                // **关键步骤**：将我们的JWT过滤器添加到过滤器链中，
-                // 确保它在标准的用户名密码认证过滤器之前执行。
+
+                // 添加JWT过滤器
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
