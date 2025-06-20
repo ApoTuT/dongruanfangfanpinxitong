@@ -1,8 +1,11 @@
 package com.ysu.drffpjcxt.service;
 
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ysu.drffpjcxt.entity.FarmerProfile;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.ysu.drffpjcxt.entity.vo.farmer.FarmerProfileVO;
 
 /**
  * 农户档案表(FarmerProfile)表服务接口
@@ -10,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
  * @author makejava
  * @since 2025-06-12 10:09:20
  */
-public interface FarmerProfileService
+public interface FarmerProfileService extends IService<FarmerProfile>
 {
 
     /**
@@ -21,31 +24,11 @@ public interface FarmerProfileService
      */
     FarmerProfile queryById(Object id);
 
-
-    Page<FarmerProfile> queryByPage(FarmerProfile FarmerProfile, PageRequest pageRequest);
-
     /**
-     * 新增数据
-     *
-     * @param FarmerProfile 实例对象
-     * @return 实例对象
+     * 分页获取所有农户信息及其风险状态
+     * @param page 分页请求参数
+     * @return 分页结果
      */
-    FarmerProfile insert(FarmerProfile FarmerProfile);
-
-    /**
-     * 修改数据
-     *
-     * @param FarmerProfile 实例对象
-     * @return 实例对象
-     */
-    FarmerProfile update(FarmerProfile FarmerProfile);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 是否成功
-     */
-    boolean deleteById(Object id);
+    IPage<FarmerProfileVO> getAllFarmerWithRiskStatus(Page<FarmerProfileVO> page);
 
 }

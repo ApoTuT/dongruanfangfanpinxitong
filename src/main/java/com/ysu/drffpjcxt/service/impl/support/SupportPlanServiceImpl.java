@@ -103,27 +103,40 @@ public class SupportPlanServiceImpl implements SupportPlanService {
     }
 
     @Override
-    public SupportPlanDetailVO getPlanDetailById(Long id) {
-        SupportPlan plan = supportPlanMapper.queryById(id);
-        if (plan == null || plan.getIsDeleted()) {
-            return null; // 如果计划不存在或已删除，返回null
-        }
-        List<SupportMeasure> measures = supportMeasureMapper.queryByPlanId(id);
+    public List<SupportPlanDetailVO> getAllPlanDetail() {
+        // 1. 查询所有未删除的帮扶计划
+        List<SupportPlan> allPlans = supportPlanMapper.queryAllActive();
 
-        // 组装VO对象
-        SupportPlanDetailVO detailVO = new SupportPlanDetailVO(plan, measures);
+        // 2. 创建返回结果集
+        List<SupportPlanDetailVO> resultList = new java.util.ArrayList<>();
 
-        // 填充额外信息
-        if(plan.getId() != null) {
-            User planner = userMapper.queryById(plan.getId());
-            if(planner != null) detailVO.setPlannerName(planner.getRealName());
-        }
-        if(plan.getFarmerId() != null) {
+        // 3. 遍历每个帮扶计划，获取其对应的帮扶措施
+        for (SupportPlan plan : allPlans) {
+            // 3.1 获取该计划对应的所有帮扶措施
+            List<SupportMeasure> measures = supportMeasureMapper.queryByPlanId(plan.getId());
+
+            // 3.2 创建SupportPlanDetailVO对象并设置基础信息
+            SupportPlanDetailVO detailVO = new SupportPlanDetailVO(plan, measures);
+
+            // 3.3 获取并设置农户姓名
             FarmerProfile farmer = farmerProfileMapper.queryById(plan.getFarmerId());
-            if(farmer != null) detailVO.setFarmerName(farmer.getHeadName());
+            if (farmer != null) {
+                detailVO.setFarmerName(farmer.getHeadName());
+            }
+
+            // 3.4 获取并设置计划制定人姓名
+            if (plan.getCreatedBy() != null) {
+                User planner = userMapper.queryById(plan.getCreatedBy());
+                if (planner != null) {
+                    detailVO.setPlannerName(planner.getRealName());
+                }
+            }
+
+            // 3.5 将该计划详情添加到结果集
+            resultList.add(detailVO);
         }
 
-        return detailVO;
+        return resultList;
     }
 
     @Override

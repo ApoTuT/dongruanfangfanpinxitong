@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Collections;
+import java.util.List;
 
 @Api(tags = "帮扶计划管理")
 @RestController
@@ -36,8 +37,8 @@ public class SupportPlanController {
 
     @GetMapping("/detail")
     @ApiOperation("查询帮扶计划详情")
-    public ResponseEntity<?> getPlanDetail(@RequestParam Long id) {
-        SupportPlanDetailVO detail = supportPlanService.getPlanDetailById(id);
+    public ResponseEntity<?> getPlanDetail() {
+        List<SupportPlanDetailVO> detail = supportPlanService.getAllPlanDetail();
         return detail != null ? ResponseEntity.ok(detail) : ResponseEntity.notFound().build();
     }
 

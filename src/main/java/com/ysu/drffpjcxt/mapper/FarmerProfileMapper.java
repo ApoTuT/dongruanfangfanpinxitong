@@ -1,10 +1,12 @@
 package com.ysu.drffpjcxt.mapper;
 
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ysu.drffpjcxt.entity.FarmerProfile;
+import com.ysu.drffpjcxt.entity.vo.farmer.FarmerProfileVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
  * @since 2025-06-12 10:09:20
  */
 @Mapper
-public interface FarmerProfileMapper
+public interface FarmerProfileMapper extends BaseMapper<FarmerProfile>
 {
 
     /**
@@ -25,15 +27,6 @@ public interface FarmerProfileMapper
      * @return 实例对象
      */
     FarmerProfile queryById(Object id);
-
-    /**
-     * 查询指定行数据
-     *
-     * @param FarmerProfileMapper 查询条件
-     * @param pageable       分页对象
-     * @return 对象列表
-     */
-    List<FarmerProfileMapper> queryAllByLimit(FarmerProfileMapper FarmerProfileMapper, @Param("pageable") Pageable pageable);
 
     /**
      * 统计总行数
@@ -76,13 +69,12 @@ public interface FarmerProfileMapper
      */
     int update(FarmerProfileMapper FarmerProfileMapper);
 
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 影响行数
-     */
-    int deleteById(Object id);
 
+    /**
+     * 分页查询所有农户信息及其风险状态
+     * @param page 分页参数
+     * @return 分页结果
+     */
+    IPage<FarmerProfileVO> selectAllFarmerWithRiskStatus(IPage<FarmerProfileVO> page);
 }
 

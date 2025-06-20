@@ -38,111 +38,107 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         log.info("================================================================================");
-        log.info("🚀 JWT过滤器开始处理请求");
-        log.info("📍 请求路径: {} {}", method, requestURI);
-        log.info("🌐 请求来源: {}", request.getRemoteAddr());
-        log.info("🔗 User-Agent: {}", request.getHeader("User-Agent"));
+        log.info("JWT过滤器开始处理请求");
+        log.info("请求路径: {} {}", method, requestURI);
+        log.info("请求来源: {}", request.getRemoteAddr());
+        log.info("User-Agent: {}", request.getHeader("User-Agent"));
 
         // 打印所有请求头信息
-        log.info("📋 所有请求头信息:");
+        log.info("所有请求头信息:");
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             String headerValue = request.getHeader(headerName);
             if ("authorization".equalsIgnoreCase(headerName)) {
                 // 对于Authorization头，只显示前缀信息，保护token安全
-                log.info("   🔐 {}: {}", headerName, headerValue != null ?
+                log.info("{}: {}", headerName, headerValue != null ?
                         (headerValue.length() > 20 ? headerValue.substring(0, 20) + "..." : headerValue) : "null");
             } else {
-                log.info("   📝 {}: {}", headerName, headerValue);
+                log.info("{}: {}", headerName, headerValue);
             }
         }
 
         // 步骤1：检查Authorization头
         log.info("================================================================================");
-        log.info("📋 步骤1: 检查Authorization请求头");
+        log.info("步骤1: 检查Authorization请求头");
 
         final String authHeader = request.getHeader("Authorization");
-        log.info("🔍 Authorization头内容: {}", authHeader != null ?
+        log.info("Authorization头内容: {}", authHeader != null ?
                 (authHeader.length() > 50 ? authHeader.substring(0, 50) + "..." : authHeader) : "null");
 
         if (authHeader == null) {
-            log.warn("❌ Authorization头为空");
-            log.info("⏭️  跳过JWT验证，继续处理下一个过滤器");
+            log.warn("Authorization头为空");
+            log.info("跳过JWT验证，继续处理下一个过滤器");
             filterChain.doFilter(request, response);
             return;
         }
 
         if (!authHeader.startsWith("Bearer ")) {
-            log.warn("❌ Authorization头格式错误，未使用'Bearer '前缀");
-            log.warn("📝 实际格式: {}", authHeader.substring(0, Math.min(authHeader.length(), 20)));
-            log.info("⏭️  跳过JWT验证，继续处理下一个过滤器");
+            log.warn("Authorization头格式错误，未使用'Bearer '前缀");
+            log.warn("实际格式: {}", authHeader.substring(0, Math.min(authHeader.length(), 20)));
+            log.info("跳过JWT验证，继续处理下一个过滤器");
             filterChain.doFilter(request, response);
             return;
         }
 
-        log.info("✅ Authorization头格式正确");
+        log.info("Authorization头格式正确");
 
         // 步骤2：提取JWT token
         log.info("================================================================================");
-        log.info("📋 步骤2: 提取JWT token");
+        log.info("步骤2: 提取JWT token");
 
         final String jwt = authHeader.substring(7);
-        log.info("🎫 提取的JWT token长度: {}", jwt.length());
-        log.info("🎫 JWT token前20个字符: {}...", jwt.length() > 20 ? jwt.substring(0, 20) : jwt);
-        log.info("🎫 JWT token后20个字符: ...{}", jwt.length() > 20 ? jwt.substring(jwt.length() - 20) : jwt);
+        log.info("提取的JWT token长度: {}", jwt.length());
+        log.info("JWT token前20个字符: {}...", jwt.length() > 20 ? jwt.substring(0, 20) : jwt);
+        log.info("JWT token后20个字符: ...{}", jwt.length() > 20 ? jwt.substring(jwt.length() - 20) : jwt);
 
         // 检查token基本格式（JWT应该有两个点分隔三个部分）
         String[] jwtParts = jwt.split("\\.");
-        log.info("🔍 JWT token部分数量: {} (标准JWT应该有3个部分)", jwtParts.length);
+        log.info("JWT token部分数量: {} (标准JWT应该有3个部分)", jwtParts.length);
         if (jwtParts.length == 3) {
-            log.info("   📝 Header部分长度: {}", jwtParts[0].length());
-            log.info("   📝 Payload部分长度: {}", jwtParts[1].length());
-            log.info("   📝 Signature部分长度: {}", jwtParts[2].length());
+            log.info("Header部分长度: {}", jwtParts[0].length());
+            log.info("Payload部分长度: {}", jwtParts[1].length());
+            log.info("Signature部分长度: {}", jwtParts[2].length());
         } else {
-            log.warn("⚠️  JWT token格式可能有问题，部分数量不等于3");
+            log.warn("WT token格式可能有问题，部分数量不等于3");
         }
 
         // 步骤3：解析用户名
         log.info("================================================================================");
-        log.info("📋 步骤3: 从JWT中解析用户信息");
+        log.info("步骤3: 从JWT中解析用户信息");
 
         final String userPhone;
         try {
-            log.info("🔄 开始解析JWT token...");
+            log.info("开始解析JWT token...");
             userPhone = jwtUtil.extractUsername(jwt);
-            log.info("✅ 成功从JWT中解析出手机号: {}", userPhone);
+            log.info("成功从JWT中解析出手机号: {}", userPhone);
 
             // 尝试获取更多token信息
             try {
                 boolean isExpired = jwtUtil.isTokenExpired(jwt);
-                log.info("⏰ Token过期状态: {}", isExpired ? "已过期" : "未过期");
-
-                // 如果有获取过期时间的方法，也可以添加
-                // Date expiration = jwtUtil.extractExpiration(jwt);
-                // log.info("⏰ Token过期时间: {}", expiration);
+                log.info("Token过期状态: {}", isExpired ? "已过期" : "未过期");
 
             } catch (Exception e) {
-                log.warn("⚠️  无法获取token详细信息: {}", e.getMessage());
+                log.warn("无法获取token详细信息: {}", e.getMessage());
             }
 
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
-            log.error("❌ JWT token已过期: {}", e.getMessage());
-            log.error("⏰ 过期时间: {}", e.getClaims().getExpiration());
+            log.error("JWT token已过期: {}", e.getMessage());
+            log.error("过期时间: {}", e.getClaims().getExpiration());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token已过期");
             return;
         } catch (io.jsonwebtoken.MalformedJwtException e) {
-            log.error("❌ JWT token格式错误: {}", e.getMessage());
+            log.error("JWT token格式错误: {}", e.getMessage());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token格式错误");
             return;
         } catch (io.jsonwebtoken.SignatureException e) {
-            log.error("❌ JWT token签名验证失败: {}", e.getMessage());
+            log.error("JWT token签名验证失败: {}", e.getMessage());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token签名无效");
             return;
         } catch (Exception e) {
-            log.error("❌ JWT解析失败: {}", e.getMessage());
-            log.error("🔍 异常类型: {}", e.getClass().getSimpleName());
-            log.error("📋 异常堆栈: ", e);
+            log.error("JWT解析失败: {}", e.getMessage());
+            log.error("异常类型: {}", e.getClass().getSimpleName());
+            log.error("异常堆栈: ", e);
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "无效的Token");
             return;
         }

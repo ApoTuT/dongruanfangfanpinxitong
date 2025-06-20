@@ -16,6 +16,11 @@
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <!-- 新增：创建一个包含创建者真实姓名的结果映射 -->
+    <resultMap type="com.ysu.drffpjcxt.entity.SupportPlan" id="SupportPlanWithUserNameMap" extends="TSupportPlanMap">
+        <result property="creatorName" column="creator_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <select id="queryById" resultMap="TSupportPlanMap">
         select
             `id`, `farmer_id`, `plan_name`, `main_goal`, `start_date`, `end_date`, `status`, `created_by`, `is_deleted`, `create_time`, `update_time`
@@ -186,4 +191,28 @@
         set `is_deleted` = 1, `update_time` = CURRENT_TIMESTAMP
         where `id` = #{id}
     </update>
+
+    <select id="queryAllActive" resultMap="SupportPlanWithUserNameMap">
+        SELECT
+            sp.`id`,
+            sp.`farmer_id`,
+            sp.`plan_name`,
+            sp.`main_goal`,
+            sp.`start_date`,
+            sp.`end_date`,
+            sp.`status`,
+            sp.`created_by`,
+            u.`real_name` AS creator_name,
+            sp.`is_deleted`,
+            sp.`create_time`,
+            sp.`update_time`
+        FROM
+            t_support_plan sp
+        LEFT JOIN
+            t_user u ON sp.created_by = u.id
+        WHERE
+            sp.`is_deleted` = 0
+        ORDER BY
+            sp.`create_time` DESC
+    </select>
 </mapper>

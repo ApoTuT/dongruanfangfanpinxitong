@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.security.Principal;
+import java.util.List;
 
 /**
  * 帮扶计划表(SupportPlan)表服务接口
@@ -67,11 +68,10 @@ public interface SupportPlanService
      */
     Long createSupportPlan(SupportPlanSaveRequest request, Principal principal);
     /**
-     * (新增) 根据ID查询帮扶计划的详细信息，包括所有帮扶措施。
-     * @param id 计划ID
-     * @return 计划详情，如果不存在则返回null
+     * (新增) 查询所有帮扶计划的详细信息，包括所有帮扶措施。
+     * @return 所有计划详情的列表
      */
-    SupportPlanDetailVO getPlanDetailById(Long id);
+    List<SupportPlanDetailVO> getAllPlanDetail();
 
     /**
      * (新增) 更新一个完整的帮扶计划。

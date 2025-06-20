@@ -85,5 +85,10 @@ public interface SupportPlanMapper
 
 
     void softDeleteById(Long id);
-}
 
+    /**
+     * 查询所有未删除的活跃帮扶计划
+     * @return 帮扶计划列表
+     */
+    List<SupportPlan> queryAllActive();
+}

@@ -58,6 +58,11 @@ public class SupportPlan implements Serializable {
     private Long createdBy;
 
     /**
+     * 制定人真实姓名（非数据库字段，仅用于展示）
+     */
+    private String creatorName;
+
+    /**
      * 逻辑删除标记:0-未删除,1-已删除
      */
     private Boolean isDeleted;

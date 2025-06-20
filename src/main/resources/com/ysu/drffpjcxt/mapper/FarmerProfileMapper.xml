@@ -263,10 +263,34 @@
         where `id` = #{id}
     </update>
 
-    <delete id="deleteById">
-        delete
-        from t_farmer_profile
-        where `id` = #{id}
-    </delete>
-
+    <select id="selectAllFarmerWithRiskStatus" resultType="com.ysu.drffpjcxt.entity.vo.farmer.FarmerProfileVO">
+        SELECT
+            fp.head_name,
+            fp.head_id_card,
+            fp.address_code,
+            fp.address_detail,
+            fp.phone,
+            fp.population_count,
+            fp.monitoring_type,
+            fp.risk_level,
+            fp.main_risk_types,
+            fp.economic_info_json,
+            fp.housing_info_json,
+            fp.policy_info_json,
+            fp.status,
+            creator.real_name AS created_by,
+            fp.create_time AS created_time,
+            updater.real_name AS updated_by,
+            fp.update_time AS updated_time
+        FROM
+            t_farmer_profile fp
+        LEFT JOIN
+            t_user creator ON fp.created_by = creator.id
+        LEFT JOIN
+            t_user updater ON fp.updated_by = updater.id
+        WHERE
+            fp.status = 1
+        ORDER BY
+            fp.update_time DESC
+    </select>
 </mapper>
