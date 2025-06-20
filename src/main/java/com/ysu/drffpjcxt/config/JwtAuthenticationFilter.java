@@ -145,129 +145,118 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 步骤4：检查SecurityContext
         log.info("================================================================================");
-        log.info("📋 步骤4: 检查SecurityContext状态");
+        log.info("步骤4: 检查SecurityContext状态");
 
         if (userPhone == null || userPhone.trim().isEmpty()) {
-            log.error("❌ 从JWT中解析的手机号为空");
+            log.error("从JWT中解析的手机号为空");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token中无用户信息");
             return;
         }
 
         boolean hasExistingAuth = SecurityContextHolder.getContext().getAuthentication() != null;
-        log.info("🔒 SecurityContext中是否已有认证信息: {}", hasExistingAuth);
+        log.info("SecurityContext中是否已有认证信息: {}", hasExistingAuth);
 
         if (hasExistingAuth) {
             String existingUser = SecurityContextHolder.getContext().getAuthentication().getName();
-            log.info("👤 当前已认证用户: {}", existingUser);
+            log.info("当前已认证用户: {}", existingUser);
 
             if (userPhone.equals(existingUser)) {
-                log.info("✅ 当前用户与token中的用户一致，跳过重复认证");
+                log.info("当前用户与token中的用户一致，跳过重复认证");
                 filterChain.doFilter(request, response);
                 return;
             } else {
-                log.warn("⚠️  当前用户与token中的用户不一致，重新认证");
+                log.warn("当前用户与token中的用户不一致，重新认证");
                 SecurityContextHolder.clearContext();
             }
         }
 
         // 步骤5：加载用户详情
         log.info("================================================================================");
-        log.info("📋 步骤5: 加载用户详情信息");
+        log.info("步骤5: 加载用户详情信息");
 
         UserDetails userDetails;
         try {
-            log.info("🔄 开始从UserDetailsService加载用户: {}", userPhone);
+            log.info("开始从UserDetailsService加载用户: {}", userPhone);
             userDetails = this.userDetailsService.loadUserByUsername(userPhone);
 
             if (userDetails == null) {
-                log.error("❌ UserDetailsService返回null，用户不存在: {}", userPhone);
+                log.error("UserDetailsService返回null，用户不存在: {}", userPhone);
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "用户不存在");
                 return;
             }
 
             log.info("✅ 成功加载用户详情:");
-            log.info("   👤 用户名: {}", userDetails.getUsername());
-            log.info("   🔐 账户启用状态: {}", userDetails.isEnabled());
-            log.info("   🔒 账户未锁定: {}", userDetails.isAccountNonLocked());
-            log.info("   ⏰ 账户未过期: {}", userDetails.isAccountNonExpired());
-            log.info("   🔑 凭证未过期: {}", userDetails.isCredentialsNonExpired());
-            log.info("   🎭 用户权限: {}", userDetails.getAuthorities());
 
         } catch (Exception e) {
-            log.error("❌ 加载用户详情失败: {}", e.getMessage());
-            log.error("🔍 异常类型: {}", e.getClass().getSimpleName());
+            log.error("加载用户详情失败: {}", e.getMessage());
+            log.error("异常类型: {}", e.getClass().getSimpleName());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "用户信息加载失败");
             return;
         }
 
         // 步骤6：验证token
         log.info("================================================================================");
-        log.info("📋 步骤6: 验证JWT token有效性");
+        log.info("步骤6: 验证JWT token有效性");
 
         boolean isTokenValid;
         try {
-            log.info("🔄 开始验证token与用户信息是否匹配...");
+            log.info("开始验证token与用户信息是否匹配...");
             isTokenValid = jwtUtil.validateToken(jwt, userDetails);
-            log.info("🔍 Token验证结果: {}", isTokenValid ? "有效" : "无效");
+            log.info("Token验证结果: {}", isTokenValid ? "有效" : "无效");
 
         } catch (Exception e) {
-            log.error("❌ Token验证过程中发生异常: {}", e.getMessage());
-            log.error("🔍 异常类型: {}", e.getClass().getSimpleName());
+            log.error("Token验证过程中发生异常: {}", e.getMessage());
+            log.error("异常类型: {}", e.getClass().getSimpleName());
             isTokenValid = false;
         }
 
         if (!isTokenValid) {
-            log.error("❌ Token验证失败！");
-            log.error("📝 可能的原因:");
-            log.error("   - Token已过期");
-            log.error("   - Token签名无效");
-            log.error("   - Token中的用户信息与数据库不匹配");
-            log.error("   - Token被篡改");
+            log.error("Token验证失败！");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token验证失败");
             return;
         }
 
         // 步骤7：设置认证信息
         log.info("================================================================================");
-        log.info("📋 步骤7: 设置Spring Security认证信息");
+        log.info("步骤7: 设置Spring Security认证信息");
 
         try {
-            log.info("🔄 创建UsernamePasswordAuthenticationToken...");
+            log.info("创建UsernamePasswordAuthenticationToken...");
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
 
-            log.info("🔄 设置认证详情...");
+            log.info("设置认证详情...");
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            log.info("🔄 将认证信息设置到SecurityContext...");
+            log.info("将认证信息设置到SecurityContext...");
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
-            log.info("✅ 认证成功！用户 '{}' 已通过JWT验证", userDetails.getUsername());
-            log.info("🎭 用户权限: {}", userDetails.getAuthorities());
+            log.info("认证成功！用户 '{}' 已通过JWT验证", userDetails.getUsername());
+            log.info("用户权限: {}", userDetails.getAuthorities());
 
         } catch (Exception e) {
-            log.error("❌ 设置认证信息时发生异常: {}", e.getMessage());
-            log.error("🔍 异常类型: {}", e.getClass().getSimpleName());
+            log.error("设置认证信息时发生异常: {}", e.getMessage());
+            log.error("异常类型: {}", e.getClass().getSimpleName());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "认证设置失败");
             return;
         }
 
         // 步骤8：继续过滤链
         log.info("================================================================================");
-        log.info("📋 步骤8: 继续执行过滤器链");
-        log.info("⏭️  JWT验证完成，继续处理请求...");
+        log.info("步骤8: 继续执行过滤器链");
+        log.info("JWT验证完成，继续处理请求...");
 
         try {
             filterChain.doFilter(request, response);
-            log.info("✅ 请求处理完成: {} {}", method, requestURI);
+            log.info("请求处理完成: {} {}", method, requestURI);
         } catch (Exception e) {
-            log.error("❌ 过滤器链执行过程中发生异常: {}", e.getMessage());
-            log.error("🔍 异常类型: {}", e.getClass().getSimpleName());
+            log.error("过滤器链执行过程中发生异常: {}", e.getMessage());
+            log.error("异常类型: {}", e.getClass().getSimpleName());
             throw e;
         }
 
         log.info("================================================================================");
-        log.info("🏁 JWT过滤器处理结束: {} {}", method, requestURI);
+        log.info("JWT过滤器处理结束: {} {}", method, requestURI);
         log.info("================================================================================");
     }
 }

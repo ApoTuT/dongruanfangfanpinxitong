@@ -104,8 +104,8 @@ public class SupportPlanServiceImpl implements SupportPlanService {
 
     @Override
     public List<SupportPlanDetailVO> getAllPlanDetail() {
-        // 1. 查询所有未删除的帮扶计划
-        List<SupportPlan> allPlans = supportPlanMapper.queryAllActive();
+        // 1. 查询所有未删除的帮扶计划（关联查询包含农户姓名和计划制定人姓名）
+        List<SupportPlan> allPlans = supportPlanMapper.queryAllActiveWithNames();
 
         // 2. 创建返回结果集
         List<SupportPlanDetailVO> resultList = new java.util.ArrayList<>();
@@ -118,21 +118,11 @@ public class SupportPlanServiceImpl implements SupportPlanService {
             // 3.2 创建SupportPlanDetailVO对象并设置基础信息
             SupportPlanDetailVO detailVO = new SupportPlanDetailVO(plan, measures);
 
-            // 3.3 获取并设置农户姓名
-            FarmerProfile farmer = farmerProfileMapper.queryById(plan.getFarmerId());
-            if (farmer != null) {
-                detailVO.setFarmerName(farmer.getHeadName());
-            }
+            // 3.3 设置农户姓名和计划制定人姓名（从关联查询中已获取）
+            detailVO.setFarmerName(plan.getFarmerHeadName());  // 新增属性，需要在SupportPlan类中添加
+            detailVO.setPlannerName(plan.getCreatorName());    // 已有属性，前面我们添加过
 
-            // 3.4 获取并设置计划制定人姓名
-            if (plan.getCreatedBy() != null) {
-                User planner = userMapper.queryById(plan.getCreatedBy());
-                if (planner != null) {
-                    detailVO.setPlannerName(planner.getRealName());
-                }
-            }
-
-            // 3.5 将该计划详情添加到结果集
+            // 3.4 将该计划详情添加到结果集
             resultList.add(detailVO);
         }
 

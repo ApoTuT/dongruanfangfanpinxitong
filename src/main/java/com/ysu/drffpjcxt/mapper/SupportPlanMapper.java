@@ -91,4 +91,10 @@ public interface SupportPlanMapper
      * @return 帮扶计划列表
      */
     List<SupportPlan> queryAllActive();
+
+    /**
+     * 查询所有未删除的帮扶计划，并关联查询农户名称和计划制定人名称
+     * @return 带有农户名称和计划制定人名称的帮扶计划列表
+     */
+    List<SupportPlan> queryAllActiveWithNames();
 }

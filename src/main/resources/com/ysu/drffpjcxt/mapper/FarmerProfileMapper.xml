@@ -265,6 +265,7 @@
 
     <select id="selectAllFarmerWithRiskStatus" resultType="com.ysu.drffpjcxt.entity.vo.farmer.FarmerProfileVO">
         SELECT
+            fp.id AS id,
             fp.head_name,
             fp.head_id_card,
             fp.address_code,

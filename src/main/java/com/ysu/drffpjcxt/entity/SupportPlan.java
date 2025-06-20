@@ -63,6 +63,11 @@ public class SupportPlan implements Serializable {
     private String creatorName;
 
     /**
+     * 农户姓名（非数据库字段，仅用于展示）
+     */
+    private String farmerHeadName;
+
+    /**
      * 逻辑删除标记:0-未删除,1-已删除
      */
     private Boolean isDeleted;

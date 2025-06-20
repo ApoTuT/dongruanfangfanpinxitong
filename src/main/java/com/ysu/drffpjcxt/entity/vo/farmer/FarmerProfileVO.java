@@ -14,6 +14,11 @@ import java.util.Date;
 public class FarmerProfileVO {
 
     /**
+     * 农户档案ID
+     */
+    private Long id;
+
+    /**
      * 姓名
      */
     private String headName;
