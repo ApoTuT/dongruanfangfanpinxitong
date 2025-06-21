@@ -3,7 +3,7 @@
 <mapper namespace="com.ysu.drffpjcxt.mapper.VisitPlanMapper">
 
     <resultMap type="com.ysu.drffpjcxt.entity.VisitPlan" id="TVisitPlanMap">
-        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="id" column="id" jdbcType="BIGINT"/>
         <result property="planName" column="plan_name" jdbcType="VARCHAR"/>
         <result property="plannerId" column="planner_id" jdbcType="VARCHAR"/>
         <result property="startDate" column="start_date" jdbcType="TIMESTAMP"/>
@@ -175,4 +175,39 @@
         where `id` = #{id}
     </delete>
 
+    <select id="selectVisitPlanVOById" resultMap="TVisitPlanMap">
+        SELECT
+            vp.id,
+            vp.plan_name,
+            vp.planner_id,
+            u.username AS planner_name,
+            vp.plan_start_date,
+            vp.plan_end_date,
+            vp.status,
+            vp.remark
+        FROM
+            t_visit_plan vp
+                LEFT JOIN
+            t_user u ON vp.planner_id = u.id
+        WHERE
+            vp.id = #{id}
+    </select>
+
+    <select id="selectAllVisitPlanVOs" resultMap="TVisitPlanMap">
+        SELECT
+            vp.id,
+            vp.plan_name,
+            vp.planner_id,
+            u.username AS planner_name,
+            vp.plan_start_date,
+            vp.plan_end_date,
+            vp.status,
+            vp.remark
+        FROM
+            t_visit_plan vp
+                LEFT JOIN
+            t_user u ON vp.planner_id = u.id
+        ORDER BY
+            vp.create_time DESC
+    </select>
 </mapper>

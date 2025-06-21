@@ -1,8 +1,9 @@
 package com.ysu.drffpjcxt.service;
 
-import com.ysu.drffpjcxt.entity.VisitPlan;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.ysu.drffpjcxt.entity.dto.visit.VisitPlanSaveDTO;
+import com.ysu.drffpjcxt.entity.vo.visit.VisitPlanVO;
+
+import java.util.List;
 
 /**
  * 走访计划表(VisitPlan)表服务接口
@@ -12,46 +13,36 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface VisitPlanService
 {
+    /**
+     * 创建新的走访计划
+     * @param saveDTO 包含计划信息和目标农户ID的DTO
+     */
+    boolean createVisitPlan(VisitPlanSaveDTO saveDTO);
 
     /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
+     * 根据ID删除走访计划
+     * @param id 计划ID
      */
-    VisitPlan queryById(Object id);
+    boolean deleteVisitPlan(Long id);
 
     /**
-     * 分页查询
+     * 更新走访计划
      *
-     * @param tVisitPlan  筛选条件
-     * @param pageRequest 分页对象
-     * @return 查询结果
+     * @param saveDTO 包含计划信息和目标农户ID的DTO
+     * @return
      */
-    Page<VisitPlan> queryByPage(VisitPlan tVisitPlan, PageRequest pageRequest);
+    boolean updateVisitPlan(VisitPlanSaveDTO saveDTO);
 
     /**
-     * 新增数据
-     *
-     * @param tVisitPlan 实例对象
-     * @return 实例对象
+     * 根据ID获取走访计划详情
+     * @param id 计划ID
+     * @return 走访计划的详细视图对象
      */
-    VisitPlan insert(VisitPlan tVisitPlan);
+    VisitPlanVO getVisitPlanById(Long id);
 
     /**
-     * 修改数据
-     *
-     * @param tVisitPlan 实例对象
-     * @return 实例对象
+     * 获取所有走访计划的列表
+     * @return 走访计划视图对象的列表
      */
-    VisitPlan update(VisitPlan tVisitPlan);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 是否成功
-     */
-    boolean deleteById(Object id);
-
+    List<VisitPlanVO> listAllVisitPlans();
 }

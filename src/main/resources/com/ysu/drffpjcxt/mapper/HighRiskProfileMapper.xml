@@ -3,67 +3,52 @@
 <mapper namespace="com.ysu.drffpjcxt.mapper.HighRiskProfileMapper">
 
     <resultMap type="com.ysu.drffpjcxt.entity.HighRiskProfile" id="THighRiskProfileMap">
-        <result property="id" column="id" jdbcType="BIGINT"/>
-        <result property="farmerId" column="farmer_id" jdbcType="BIGINT"/>
-        <result property="markingApplicationId" column="marking_application_id" jdbcType="BIGINT"/>
-        <result property="riskCauseDescription" column="risk_cause_description" jdbcType="VARCHAR"/>
-        <result property="riskTrendDescription" column="risk_trend_description" jdbcType="VARCHAR"/>
-        <result property="monitoringStatus" column="monitoring_status" jdbcType="TINYINT"/>
-        <result property="riskIdentifiedDate" column="risk_identified_date" jdbcType="DATE"/>
-        <result property="lastWarningTime" column="last_warning_time" jdbcType="TIMESTAMP"/>
-        <result property="totalWarningCount" column="total_warning_count" jdbcType="INTEGER"/>
-        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <select id="queryById" resultMap="THighRiskProfileMap">
         select
-            `id`, `farmer_id`, `marking_application_id`, `risk_cause_description`, `risk_trend_description`, `monitoring_status`, `risk_identified_date`, `last_warning_time`, `total_warning_count`, `is_deleted`, `create_time`, `update_time`
+            `id`, `farmer_id`, `status`,`risk_cause_description`,`risk_trend_description`, `monitoring_status`, `risk_identified_date`, `last_warning_time`, `total_warning_count`, `is_deleted`, `create_time`, `update_time`
         from t_high_risk_profile
         where `id` = #{id}
     </select>
 
     <select id="queryAllByLimit" resultMap="THighRiskProfileMap">
         select
-        `id`, `farmer_id`, `marking_application_id`, `risk_cause_description`, `risk_trend_description`, `monitoring_status`, `risk_identified_date`, `last_warning_time`, `total_warning_count`, `is_deleted`, `create_time`, `update_time`
+        `id`, `farmer_id`, `status`, `risk_cause_description`, `risk_trend_description`, `monitoring_status`, `risk_identified_date`, `last_warning_time`, `total_warning_count`, `is_deleted`, `create_time`, `update_time`
         from t_high_risk_profile
         <where>
-            <if test="id != null">
-                and `id` = #{id}
+            <if test="highRiskProfile.id != null">
+                and `id` = #{highRiskProfile.id}
             </if>
-            <if test="farmerId != null">
-                and `farmer_id` = #{farmerId}
+            <if test="highRiskProfile.farmerId != null">
+                and `farmer_id` = #{highRiskProfile.farmerId}
             </if>
-            <if test="markingApplicationId != null">
-                and `marking_application_id` = #{markingApplicationId}
+            <if test="highRiskProfile.riskCauseDescription != null and highRiskProfile.riskCauseDescription != ''">
+                and `risk_cause_description` = #{highRiskProfile.riskCauseDescription}
             </if>
-            <if test="riskCauseDescription != null and riskCauseDescription != ''">
-                and `risk_cause_description` = #{riskCauseDescription}
+            <if test="highRiskProfile.riskTrendDescription != null and highRiskProfile.riskTrendDescription != ''">
+                and `risk_trend_description` = #{highRiskProfile.riskTrendDescription}
             </if>
-            <if test="riskTrendDescription != null and riskTrendDescription != ''">
-                and `risk_trend_description` = #{riskTrendDescription}
+            <if test="highRiskProfile.monitoringStatus != null">
+                and `monitoring_status` = #{highRiskProfile.monitoringStatus}
             </if>
-            <if test="monitoringStatus != null">
-                and `monitoring_status` = #{monitoringStatus}
+            <if test="highRiskProfile.riskIdentifiedDate != null">
+                and `risk_identified_date` = #{highRiskProfile.riskIdentifiedDate}
             </if>
-            <if test="riskIdentifiedDate != null">
-                and `risk_identified_date` = #{riskIdentifiedDate}
+            <if test="highRiskProfile.lastWarningTime != null">
+                and `last_warning_time` = #{highRiskProfile.lastWarningTime}
             </if>
-            <if test="lastWarningTime != null">
-                and `last_warning_time` = #{lastWarningTime}
+            <if test="highRiskProfile.totalWarningCount != null">
+                and `total_warning_count` = #{highRiskProfile.totalWarningCount}
             </if>
-            <if test="totalWarningCount != null">
-                and `total_warning_count` = #{totalWarningCount}
+            <if test="highRiskProfile.isDeleted != null">
+                and `is_deleted` = #{highRiskProfile.isDeleted}
             </if>
-            <if test="isDeleted != null">
-                and `is_deleted` = #{isDeleted}
+            <if test="highRiskProfile.createTime != null">
+                and `create_time` = #{highRiskProfile.createTime}
             </if>
-            <if test="createTime != null">
-                and `create_time` = #{createTime}
-            </if>
-            <if test="updateTime != null">
-                and `update_time` = #{updateTime}
+            <if test="highRiskProfile.updateTime != null">
+                and `update_time` = #{highRiskProfile.updateTime}
             </if>
         </where>
         limit #{pageable.offset}, #{pageable.pageSize}
@@ -73,114 +58,50 @@
         select count(1)
         from t_high_risk_profile
         <where>
-            <if test="id != null">
-                and `id` = #{id}
+            <if test="highRiskProfile.id != null">
+                and `id` = #{highRiskProfile.id}
             </if>
-            <if test="farmerId != null">
-                and `farmer_id` = #{farmerId}
+            <if test="highRiskProfile.farmerId != null">
+                and `farmer_id` = #{highRiskProfile.farmerId}
             </if>
-            <if test="markingApplicationId != null">
-                and `marking_application_id` = #{markingApplicationId}
+            <if test="highRiskProfile.status != null">
+                and `status` = #{highRiskProfile.status}
             </if>
-            <if test="riskCauseDescription != null and riskCauseDescription != ''">
-                and `risk_cause_description` = #{riskCauseDescription}
+            <if test="highRiskProfile.riskCauseDescription != null and highRiskProfile.riskCauseDescription != ''">
+                and `risk_cause_description` = #{highRiskProfile.riskCauseDescription}
             </if>
-            <if test="riskTrendDescription != null and riskTrendDescription != ''">
-                and `risk_trend_description` = #{riskTrendDescription}
+            <if test="highRiskProfile.riskTrendDescription != null and highRiskProfile.riskTrendDescription != ''">
+                and `risk_trend_description` = #{highRiskProfile.riskTrendDescription}
             </if>
-            <if test="monitoringStatus != null">
-                and `monitoring_status` = #{monitoringStatus}
+            <if test="highRiskProfile.monitoringStatus != null">
+                and `monitoring_status` = #{highRiskProfile.monitoringStatus}
             </if>
-            <if test="riskIdentifiedDate != null">
-                and `risk_identified_date` = #{riskIdentifiedDate}
+            <if test="highRiskProfile.riskIdentifiedDate != null">
+                and `risk_identified_date` = #{highRiskProfile.riskIdentifiedDate}
             </if>
-            <if test="lastWarningTime != null">
-                and `last_warning_time` = #{lastWarningTime}
+            <if test="highRiskProfile.lastWarningTime != null">
+                and `last_warning_time` = #{highRiskProfile.lastWarningTime}
             </if>
-            <if test="totalWarningCount != null">
-                and `total_warning_count` = #{totalWarningCount}
+            <if test="highRiskProfile.totalWarningCount != null">
+                and `total_warning_count` = #{highRiskProfile.totalWarningCount}
             </if>
-            <if test="isDeleted != null">
-                and `is_deleted` = #{isDeleted}
+            <if test="highRiskProfile.isDeleted != null">
+                and `is_deleted` = #{highRiskProfile.isDeleted}
             </if>
-            <if test="createTime != null">
-                and `create_time` = #{createTime}
+            <if test="highRiskProfile.createTime != null">
+                and `create_time` = #{highRiskProfile.createTime}
             </if>
-            <if test="updateTime != null">
-                and `update_time` = #{updateTime}
+            <if test="highRiskProfile.updateTime != null">
+                and `update_time` = #{highRiskProfile.updateTime}
             </if>
         </where>
     </select>
-
-    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into t_high_risk_profile(`farmer_id`, `marking_application_id`, `risk_cause_description`, `risk_trend_description`, `monitoring_status`, `risk_identified_date`, `last_warning_time`, `total_warning_count`, `is_deleted`, `create_time`, `update_time`)
-        values (#{farmerId}, #{markingApplicationId}, #{riskCauseDescription}, #{riskTrendDescription}, #{monitoringStatus}, #{riskIdentifiedDate}, #{lastWarningTime}, #{totalWarningCount}, #{isDeleted}, #{createTime}, #{updateTime})
-    </insert>
-
-    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into
-        t_high_risk_profile(`farmer_id`, `marking_application_id`, `risk_cause_description`, `risk_trend_description`, `monitoring_status`, `risk_identified_date`, `last_warning_time`, `total_warning_count`, `is_deleted`, `create_time`, `update_time`)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.farmerId}, #{entity.markingApplicationId}, #{entity.riskCauseDescription}, #{entity.riskTrendDescription}, #{entity.monitoringStatus}, #{entity.riskIdentifiedDate}, #{entity.lastWarningTime}, #{entity.totalWarningCount}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
-        </foreach>
-    </insert>
-
-    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into
-        t_high_risk_profile(`id`, `farmer_id`, `marking_application_id`, `risk_cause_description`, `risk_trend_description`, `monitoring_status`, `risk_identified_date`, `last_warning_time`, `total_warning_count`, `is_deleted`, `create_time`, `update_time`)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.id}, #{entity.farmerId}, #{entity.markingApplicationId}, #{entity.riskCauseDescription}, #{entity.riskTrendDescription}, #{entity.monitoringStatus}, #{entity.riskIdentifiedDate}, #{entity.lastWarningTime}, #{entity.totalWarningCount}, #{entity.isDeleted}, #{entity.createTime}, #{entity.updateTime})
-        </foreach>
-        on duplicate key update
-        `farmer_id` = values(`farmer_id`),
-        `marking_application_id` = values(`marking_application_id`),
-        `risk_cause_description` = values(`risk_cause_description`),
-        `risk_trend_description` = values(`risk_trend_description`),
-        `monitoring_status` = values(`monitoring_status`),
-        `risk_identified_date` = values(`risk_identified_date`),
-        `last_warning_time` = values(`last_warning_time`),
-        `total_warning_count` = values(`total_warning_count`),
-        `is_deleted` = values(`is_deleted`),
-        `update_time` = values(`update_time`)
-    </insert>
 
     <update id="update">
         update t_high_risk_profile
         <set>
             <if test="farmerId != null">
                 `farmer_id` = #{farmerId},
-            </if>
-            <if test="markingApplicationId != null">
-                `marking_application_id` = #{markingApplicationId},
-            </if>
-            <if test="riskCauseDescription != null and riskCauseDescription != ''">
-                `risk_cause_description` = #{riskCauseDescription},
-            </if>
-            <if test="riskTrendDescription != null and riskTrendDescription != ''">
-                `risk_trend_description` = #{riskTrendDescription},
-            </if>
-            <if test="monitoringStatus != null">
-                `monitoring_status` = #{monitoringStatus},
-            </if>
-            <if test="riskIdentifiedDate != null">
-                `risk_identified_date` = #{riskIdentifiedDate},
-            </if>
-            <if test="lastWarningTime != null">
-                `last_warning_time` = #{lastWarningTime},
-            </if>
-            <if test="totalWarningCount != null">
-                `total_warning_count` = #{totalWarningCount},
-            </if>
-            <if test="isDeleted != null">
-                `is_deleted` = #{isDeleted},
-            </if>
-            <if test="createTime != null">
-                `create_time` = #{createTime},
-            </if>
-            <if test="updateTime != null">
-                `update_time` = #{updateTime},
             </if>
         </set>
         where `id` = #{id}
@@ -191,5 +112,4 @@
         from t_high_risk_profile
         where `id` = #{id}
     </delete>
-
 </mapper>

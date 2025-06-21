@@ -12,7 +12,6 @@ import java.util.Date;
  */
 @Data
 public class HighRiskProfile implements Serializable {
-    private static final long serialVersionUID = -23392398747975929L;
 
     /**
      * 高风险档案ID
@@ -26,11 +25,7 @@ public class HighRiskProfile implements Serializable {
      */
     private Long farmerId;
 
-    /**
-     * 关联高风险标记申请ID
-     * 【已修改】Object -> Long
-     */
-    private Long markingApplicationId;
+    private String status;
 
     /**
      * 风险原因详细描述

@@ -23,32 +23,32 @@ public interface HighRiskProfileMapper
      * @param id 主键
      * @return 实例对象
      */
-    HighRiskProfile queryById(Object id);
+    HighRiskProfile queryById(@Param("id") Object id);
 
     /**
      * 查询指定行数据
      *
-     * @param HighRiskProfile 查询条件
+     * @param highRiskProfile 查询条件
      * @param pageable         分页对象
      * @return 对象列表
      */
-    List<HighRiskProfile> queryAllByLimit(HighRiskProfile HighRiskProfile, @Param("pageable") Pageable pageable);
+    List<HighRiskProfile> queryAllByLimit(@Param("highRiskProfile") HighRiskProfile highRiskProfile, @Param("pageable") Pageable pageable);
 
     /**
      * 统计总行数
      *
-     * @param HighRiskProfile 查询条件
+     * @param highRiskProfile 查询条件
      * @return 总行数
      */
-    long count(HighRiskProfile HighRiskProfile);
+    long count(@Param("highRiskProfile") HighRiskProfile highRiskProfile);
 
     /**
      * 新增数据
      *
-     * @param HighRiskProfile 实例对象
+     * @param highRiskProfile 实例对象
      * @return 影响行数
      */
-    int insert(HighRiskProfile HighRiskProfile);
+    int insert(HighRiskProfile highRiskProfile);
 
     /**
      * 批量新增数据（MyBatis原生foreach方法）
@@ -70,10 +70,10 @@ public interface HighRiskProfileMapper
     /**
      * 修改数据
      *
-     * @param HighRiskProfile 实例对象
+     * @param highRiskProfile 实例对象
      * @return 影响行数
      */
-    int update(HighRiskProfile HighRiskProfile);
+    int update(HighRiskProfile highRiskProfile);
 
     /**
      * 通过主键删除数据
@@ -81,7 +81,6 @@ public interface HighRiskProfileMapper
      * @param id 主键
      * @return 影响行数
      */
-    int deleteById(Object id);
+    int deleteById(@Param("id") Object id);
 
 }
-

@@ -24,27 +24,27 @@ public interface HighRiskApplicationService
     /**
      * 分页查询
      *
-     * @param HighRiskApplication 筛选条件
+     * @param highRiskApplication 筛选条件
      * @param pageRequest          分页对象
      * @return 查询结果
      */
-    Page<HighRiskApplication> queryByPage(HighRiskApplication HighRiskApplication, PageRequest pageRequest);
+    Page<HighRiskApplication> queryByPage(HighRiskApplication highRiskApplication, PageRequest pageRequest);
 
     /**
      * 新增数据
      *
-     * @param HighRiskApplication 实例对象
+     * @param highRiskApplication 实例对象
      * @return 实例对象
      */
-    HighRiskApplication insert(HighRiskApplication HighRiskApplication);
+    HighRiskApplication insert(HighRiskApplication highRiskApplication);
 
     /**
      * 修改数据
      *
-     * @param HighRiskApplication 实例对象
+     * @param highRiskApplication 实例对象
      * @return 实例对象
      */
-    HighRiskApplication update(HighRiskApplication HighRiskApplication);
+    HighRiskApplication update(HighRiskApplication highRiskApplication);
 
     /**
      * 通过主键删除数据
@@ -53,5 +53,4 @@ public interface HighRiskApplicationService
      * @return 是否成功
      */
     boolean deleteById(Object id);
-
 }

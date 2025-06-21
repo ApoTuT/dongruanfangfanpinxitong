@@ -1,6 +1,7 @@
 package com.ysu.drffpjcxt.mapper;
 
 import com.ysu.drffpjcxt.entity.VisitPlan;
+import com.ysu.drffpjcxt.entity.vo.visit.VisitPlanVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +83,16 @@ public interface VisitPlanMapper
      * @return 影响行数
      */
     int deleteById(Object id);
+    /**
+     * 根据ID查询走访计划VO (包含执行人姓名)
+     * @param id 计划ID
+     * @return VisitPlanVO
+     */
+    VisitPlanVO selectVisitPlanVOById(Long id);
 
+    /**
+     * 查询所有走访计划VO列表 (包含执行人姓名)
+     * @return List<VisitPlanVO>
+     */
+    List<VisitPlanVO> selectAllVisitPlanVOs();
 }
-
