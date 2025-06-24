@@ -83,4 +83,13 @@ public interface HighRiskProfileMapper
      */
     int deleteById(@Param("id") Object id);
 
+    /**
+     * 查询所有高风险档案，支持按状态过滤
+     * @param status 状态筛选条件，可以为null
+     * @return 高风险档案列表
+     */
+    List<HighRiskProfile> selectAll(@Param("status") String status);
+
+    void approve(Long id, String status);
+
 }

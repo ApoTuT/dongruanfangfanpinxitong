@@ -6,10 +6,7 @@ import com.ysu.drffpjcxt.entity.VisitRecord;
 import com.ysu.drffpjcxt.entity.dto.visit.VisitRecordAddDTO;
 import com.ysu.drffpjcxt.entity.dto.visit.VisitRecordQueryDTO;
 import com.ysu.drffpjcxt.entity.vo.visit.VisitRecordVO;
-import com.ysu.drffpjcxt.mapper.VisitRecordMapper;
-import com.ysu.drffpjcxt.mapper.FarmerProfileMapper;
-import com.ysu.drffpjcxt.mapper.UserMapper;
-import com.ysu.drffpjcxt.mapper.VisitPlanMapper;
+import com.ysu.drffpjcxt.mapper.*;
 import com.ysu.drffpjcxt.service.VisitRecordService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +27,13 @@ public class VisitRecordServiceImpl implements VisitRecordService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private SupportPlanMapper supportPlanMapper;
+
     @Override
     public boolean addVisitRecord(VisitRecordAddDTO addDTO) {
         // 校验关联数据是否存在
-        if (visitPlanMapper.queryById(addDTO.getPlanId()) == null
+        if (supportPlanMapper.queryById(addDTO.getPlanId()) == null
                 || farmerProfileMapper.queryById(addDTO.getFarmerId()) == null
                 || userMapper.queryById(addDTO.getVisitorId()) == null) {
             return false;

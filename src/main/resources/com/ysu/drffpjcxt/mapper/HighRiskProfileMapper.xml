@@ -112,4 +112,103 @@
         from t_high_risk_profile
         where `id` = #{id}
     </delete>
+
+    <select id="selectAll" resultType="com.ysu.drffpjcxt.entity.HighRiskProfile">
+        select
+        id,
+        farmer_id,
+        status,
+        risk_cause_description,
+        risk_trend_description,
+        monitoring_status,
+        risk_identified_date,
+        last_warning_time,
+        total_warning_count,
+        is_deleted,
+        create_time,
+        update_time
+        from t_high_risk_profile
+        <where>
+            is_deleted = 0
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into t_high_risk_profile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="farmerId != null">
+                `farmer_id`,
+            </if>
+
+            <if test="status != null and status != ''">
+                `status`,
+            </if>
+            <if test="riskCauseDescription != null and riskCauseDescription != ''">
+                `risk_cause_description`,
+            </if>
+            <if test="riskTrendDescription != null and riskTrendDescription != ''">
+                `risk_trend_description`,
+            </if>
+            <if test="monitoringStatus != null">
+                `monitoring_status`,
+            </if>
+            <if test="riskIdentifiedDate != null">
+                `risk_identified_date`,
+            </if>
+            <if test="lastWarningTime != null">
+                `last_warning_time`,
+            </if>
+            <if test="totalWarningCount != null">
+                `total_warning_count`,
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="farmerId != null">
+                #{farmerId},
+            </if>
+
+            <if test="status != null and status != ''">
+                #{status},
+            </if>
+            <if test="riskCauseDescription != null and riskCauseDescription != ''">
+                #{riskCauseDescription},
+            </if>
+            <if test="riskTrendDescription != null and riskTrendDescription != ''">
+                #{riskTrendDescription},
+            </if>
+            <if test="monitoringStatus != null">
+                #{monitoringStatus},
+            </if>
+            <if test="riskIdentifiedDate != null">
+                #{riskIdentifiedDate},
+            </if>
+            <if test="lastWarningTime != null">
+                #{lastWarningTime},
+            </if>
+            <if test="totalWarningCount != null">
+                #{totalWarningCount},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted},
+            </if>
+        </trim>
+    </insert>
+    <update id="approve">
+        update t_high_risk_profile
+        <set>
+            <if test="status != null and status != ''">
+                `status` = #{status},
+            </if>
+            `update_time` = now()
+        </set>
+        where `id` = #{id}
+    </update>
+
 </mapper>

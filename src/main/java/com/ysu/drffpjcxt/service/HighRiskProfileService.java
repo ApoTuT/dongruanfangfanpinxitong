@@ -4,6 +4,8 @@ import com.ysu.drffpjcxt.entity.HighRiskProfile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 /**
  * 高风险户档案表(HighRiskProfile)表服务接口
  *
@@ -54,4 +56,16 @@ public interface HighRiskProfileService
      */
     boolean deleteById(Object id);
 
+    /**
+     * 查询所有高风险档案
+     * @param status 状态筛选条件，传"待审批"则只查询待审批的记录，传null或空字符串则查询所有
+     * @return 高风险档案列表
+     */
+    List<HighRiskProfile> selectAll(String status);
+    /**
+     * 审批操作
+     * @param id 档案ID
+     * @param status 审批结果: "通过" 或 "不通过"
+     */
+    void approve(Long id, String status);
 }

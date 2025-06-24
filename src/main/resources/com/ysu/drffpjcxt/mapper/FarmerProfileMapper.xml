@@ -297,4 +297,9 @@
         ORDER BY
             fp.update_time DESC
     </select>
+
+    <update id="changeRiskStatus">
+        update t_farmer_profile set risk_level = #{status}
+        where id = #{frmerId}
+    </update>
 </mapper>

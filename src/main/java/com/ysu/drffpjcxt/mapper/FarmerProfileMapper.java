@@ -76,5 +76,7 @@ public interface FarmerProfileMapper extends BaseMapper<FarmerProfile>
      * @return 分页结果
      */
     IPage<FarmerProfileVO> selectAllFarmerWithRiskStatus(IPage<FarmerProfileVO> page);
+
+    void changeRiskStatus(Long farmerId,Long status);
 }
 

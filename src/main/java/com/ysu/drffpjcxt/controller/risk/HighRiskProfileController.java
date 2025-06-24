@@ -123,4 +123,33 @@ public class HighRiskProfileController {
         vo.setId(p.getId());
         return vo;
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<HighRiskApplicationVo>> list(
+            @RequestParam(required = false) String status) {
+
+        List<HighRiskProfile> profiles = highRiskProfileService.selectAll(status);
+        List<HighRiskApplicationVo> voList = profiles.stream()
+                .map(this::toVo)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(voList);
+    }
+
+    /**
+     * 审批高风险档案
+     */
+    @PostMapping("/approve")
+    public ResponseEntity<String> approve(
+            @RequestParam Long id,
+            @RequestParam String status) {
+        try {
+            highRiskProfileService.approve(id, status);
+            return ResponseEntity.ok("审批成功");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("审批失败: " + e.getMessage());
+        }
+    }
+
+
 }

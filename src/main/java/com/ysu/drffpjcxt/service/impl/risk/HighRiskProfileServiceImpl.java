@@ -1,6 +1,7 @@
 package com.ysu.drffpjcxt.service.impl.risk;
 
 import com.ysu.drffpjcxt.entity.HighRiskProfile;
+import com.ysu.drffpjcxt.mapper.FarmerProfileMapper;
 import com.ysu.drffpjcxt.mapper.HighRiskProfileMapper;
 import com.ysu.drffpjcxt.service.HighRiskProfileService;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,8 @@ import java.util.List;
 public class HighRiskProfileServiceImpl implements HighRiskProfileService {
     @Resource
     private HighRiskProfileMapper highRiskProfileMapper;
+    @Resource
+    private FarmerProfileMapper farmerProfileMapper;
 
     @Override
     public HighRiskProfile queryById(Object id) {
@@ -54,5 +57,25 @@ public class HighRiskProfileServiceImpl implements HighRiskProfileService {
     @Override
     public boolean deleteById(Object id) {
         return highRiskProfileMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    public List<HighRiskProfile> selectAll(String status) {
+        return highRiskProfileMapper.selectAll(status);
+    }
+
+    @Override
+    public void approve(Long id, String status) {
+        HighRiskProfile profile = queryById(id);
+        if (profile == null) {
+            throw new RuntimeException("记录不存在");
+        }
+        profile.setStatus(status);
+        highRiskProfileMapper.approve(id,status);
+        if(status.equals("通过")){
+            Long st = 1L;
+            farmerProfileMapper.changeRiskStatus(id,st);
+        }
+
     }
 }
