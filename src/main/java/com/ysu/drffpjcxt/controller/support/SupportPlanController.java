@@ -42,9 +42,9 @@ public class SupportPlanController {
         return detail != null ? ResponseEntity.ok(detail) : ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update")
     @ApiOperation("更新帮扶计划")
-    public ResponseEntity<?> updateSupportPlan(@PathVariable Long id,
+    public ResponseEntity<?> updateSupportPlan(@RequestParam Long id,
                                                @RequestBody SupportPlanSaveRequest request,
                                                Principal principal) {
         try {
@@ -55,9 +55,9 @@ public class SupportPlanController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete")
     @ApiOperation("删除帮扶计划")
-    public ResponseEntity<?> deleteSupportPlan(@PathVariable Long id) {
+    public ResponseEntity<?> deleteSupportPlan(@RequestParam Long id) {
         try {
             supportPlanService.deleteSupportPlanById(id);
             return ResponseEntity.ok().body(Collections.singletonMap("message", "删除成功"));
@@ -66,9 +66,9 @@ public class SupportPlanController {
         }
     }
 
-    @PostMapping("/approval/{id}")
+    @PostMapping("/approval")
     @ApiOperation("审批帮扶计划 (需要县级干部权限)")
-    public ResponseEntity<?> approvePlan(@PathVariable Long id,
+    public ResponseEntity<?> approvePlan(@RequestParam Long id,
                                          @RequestBody ApprovalRequest request,
                                          Principal principal) {
         try {
