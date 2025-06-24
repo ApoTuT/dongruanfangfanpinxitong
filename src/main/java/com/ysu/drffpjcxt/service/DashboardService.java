@@ -1,6 +1,7 @@
 package com.ysu.drffpjcxt.service;
 
 import com.ysu.drffpjcxt.entity.Dashboard;
+import com.ysu.drffpjcxt.entity.vo.data.DashboardVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -12,46 +13,5 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface DashboardService
 {
-
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
-     */
-    Dashboard queryById(Object id);
-
-    /**
-     * 分页查询
-     *
-     * @param Dashboard  筛选条件
-     * @param pageRequest 分页对象
-     * @return 查询结果
-     */
-    Page<Dashboard> queryByPage(Dashboard Dashboard, PageRequest pageRequest);
-
-    /**
-     * 新增数据
-     *
-     * @param Dashboard 实例对象
-     * @return 实例对象
-     */
-    Dashboard insert(Dashboard Dashboard);
-
-    /**
-     * 修改数据
-     *
-     * @param Dashboard 实例对象
-     * @return 实例对象
-     */
-    Dashboard update(Dashboard Dashboard);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 是否成功
-     */
-    boolean deleteById(Object id);
-
+    DashboardVO getDashboardStatus();
 }

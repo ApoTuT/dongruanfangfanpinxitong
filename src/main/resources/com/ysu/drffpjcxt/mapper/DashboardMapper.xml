@@ -135,4 +135,47 @@
         where `id` = #{id}
     </delete>
 
+    <select id="getMonitoringTypeDistribution" resultType="com.ysu.drffpjcxt.entity.vo.data.DistributionVO">
+        SELECT
+            CASE monitoring_type
+                WHEN 1 THEN '脱贫不稳定户'
+                WHEN 2 THEN '边缘易致贫户'
+                WHEN 3 THEN '突发严重困难户'
+                END as name,
+            COUNT(*) as value
+        FROM t_farmer_profile
+        GROUP BY monitoring_type
+    </select>
+
+    <select id="getRiskLevelDistribution" resultType="com.ysu.drffpjcxt.entity.vo.data.DistributionVO">
+        SELECT
+            CASE risk_level
+                WHEN 1 THEN '高风险'
+                WHEN 2 THEN '中风险'
+                WHEN 3 THEN '低风险'
+                END as name,
+            COUNT(*) as value
+        FROM t_farmer_profile
+        GROUP BY risk_level
+    </select>
+
+    <select id="getRegionDistribution" resultType="com.ysu.drffpjcxt.entity.vo.data.DistributionVO">
+        SELECT
+            address_code as name,
+            COUNT(*) as value
+        FROM t_farmer_profile
+        GROUP BY address_code
+    </select>
+
+    <select id="getFarmerStatusDistribution" resultType="com.ysu.drffpjcxt.entity.vo.data.DistributionVO">
+        SELECT
+            CASE status
+                WHEN 1 THEN '正常'
+                WHEN 2 THEN '已消除'
+                WHEN 3 THEN '返贫'
+                END as name,
+            COUNT(*) as value
+        FROM t_farmer_profile
+        GROUP BY status
+    </select>
 </mapper>
