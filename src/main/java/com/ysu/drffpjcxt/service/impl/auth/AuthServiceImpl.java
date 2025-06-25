@@ -14,13 +14,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.security.Principal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -38,6 +41,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
     /**
      * Redis中存储密码重置验证码的键的前缀。
      */
@@ -99,12 +105,18 @@ public class AuthServiceImpl implements AuthService {
                 new ArrayList<>() // 权限列表，暂时为空
         );
 
-        // 使用 JwtUtil 生成一个真实的JWT
         String token = jwtUtil.generateToken(userDetails);
-        // -- 【核心修正】结束 --
 
-        List<String> roles = findUserRoles(user.getId());
-        List<String> permissions = findUserPermissions(user.getId());
+        UserDetails loadedUser = this.userDetailsService.loadUserByUsername(user.getPhone());
+        List<String> roles = loadedUser.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .filter(auth -> auth.startsWith("ROLE_"))
+            .map(auth -> auth.substring("ROLE_".length()))
+            .collect(Collectors.toList());
+        List<String> permissions = loadedUser.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .filter(auth -> !auth.startsWith("ROLE_"))
+            .collect(Collectors.toList());
 
         return buildLoginResponse(user, token, roles, permissions);
     }
@@ -120,7 +132,6 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    // ... 其他辅助方法 buildLoginResponse, findUserRoles, findUserPermissions ...
     private LoginResponseVO buildLoginResponse(User user, String token, List<String> roles, List<String> permissions) {
         LoginResponseVO.UserInfo userInfo = new LoginResponseVO.UserInfo();
         userInfo.setUserId(user.getId());
@@ -131,14 +142,6 @@ public class AuthServiceImpl implements AuthService {
         userInfo.setRoles(roles);
         userInfo.setPermissions(permissions);
         return new LoginResponseVO(token, userInfo);
-    }
-    private List<String> findUserRoles(Long userId) {
-        // TODO: 实现真实的数据库查询逻辑
-        return Collections.singletonList("普通帮扶干部");
-    }
-    private List<String> findUserPermissions(Long userId) {
-        // TODO: 实现真实的数据库查询逻辑
-        return Collections.singletonList("profile:view");
     }
 
     @Override
